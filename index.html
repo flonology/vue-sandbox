@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Pass UI">
-    <title>Pass UI</title>
+    <meta name="description" content="Creds UI">
+    <title>Creds UI</title>
 
     <link rel="stylesheet" href="css/pure-min.css">
     <link rel="stylesheet" href="css/user.css">
@@ -13,7 +13,20 @@
 <body>
   <div id="app">
       {{ message }}
-    </div>
+
+      <hello-world></hello-world>
+  </div>
+
+    <script type="text/x-template" id="hello-world-template">
+      <p>Hello hello hello</p>
+    </script>
+
+
+    <script>
+    Vue.component('hello-world', {
+        template: '#hello-world-template'
+    })
+    </script>
 
     <script>
       var app = new Vue({
