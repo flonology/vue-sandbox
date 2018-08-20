@@ -28,7 +28,9 @@
           </ul>
 
           <input v-on:keydown.down.prevent="selectNextListEntry"
-                 v-on:keydown.up.prevent="selectPrevListEntry"></input>
+                 v-on:keydown.up.prevent="selectPrevListEntry"
+                 ref="searchEntryInput"
+                 autofocus="autofocus"></input>
       </div>
     </script>
 
@@ -46,6 +48,9 @@
                     { id: 5, title: 'A handful of beautiful trees', selected: false}
                 ]
             }
+        },
+        mounted: function() {
+            // do stuff when mounted
         },
         methods: {
             selectNextListEntry: function(event) {
