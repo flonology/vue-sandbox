@@ -14,17 +14,33 @@
   <div id="app">
       {{ message }}
 
-      <hello-world></hello-world>
+      <select-list></select-list>
   </div>
 
-    <script type="text/x-template" id="hello-world-template">
-      <p>Hello hello hello</p>
+    <script type="text/x-template" id="select-list-tpl">
+      <ul>
+          <li v-for="listEntry in listEntries"
+              v-bind:key="listEntry.id"
+              v-bind:class="{ selected: listEntry.selected }">
+              {{ listEntry.title }}
+          </li>
+      </ul>
     </script>
 
-
     <script>
-    Vue.component('hello-world', {
-        template: '#hello-world-template'
+    Vue.component('select-list', {
+        template: '#select-list-tpl',
+        data: function() {
+            return {
+                listEntries: [
+                    { id: 1, title: '500 pieces of paper'},
+                    { id: 2, title: 'One pair of scissors', selected: true},
+                    { id: 3, title: 'A bottle of beer'},
+                    { id: 4, title: 'Some kind of well-designed notebook'},
+                    { id: 5, title: 'A handful of beautiful trees'}
+                ]
+            }
+        }
     })
     </script>
 
