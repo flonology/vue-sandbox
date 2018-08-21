@@ -25,13 +25,15 @@
           <ul>
               <li v-for="listEntry in list.entries"
                   v-bind:key="listEntry.id"
-                  v-bind:class="{ selected: listEntry.selected }">
+                  v-bind:class="{ selected: listEntry.selected }"
+                  v-on:click="openEntry(listEntry.id)">
                   {{ listEntry.title }}
               </li>
           </ul>
 
           <input v-on:keydown.down.prevent="selectNext"
                  v-on:keydown.up.prevent="selectPrev"
+                 v-on:keyup.enter="showEntry"
                  ref="searchEntryInput"
                  autofocus="autofocus"></input>
       </div>
@@ -60,6 +62,12 @@
             },
             selectPrev: function(event) {
                 this.list.selectPrev();
+            },
+            showEntry: function(event) {
+                console.log(this.list.getCurrent().title);
+            },
+            openEntry: function(listEntryId) {
+                console.log(this.list.find(listEntryId).title);
             }
         }
     })

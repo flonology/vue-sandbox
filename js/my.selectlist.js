@@ -1,5 +1,6 @@
 My.SelectList = function(entries) {
     var listEntries = entries;
+    var idMap = [];
     var first = 0;
     var last = listEntries.length - 1;
     var current = 0;
@@ -60,11 +61,32 @@ My.SelectList = function(entries) {
         selectIndex(current - 1);
     };
 
+    var getCurrent = function() {
+        return listEntries[current];
+    };
+
+    var find = function(id) {
+        if (isEmpty()) {
+            return null;
+        }
+
+        return idMap[id];
+    }
+
+    var initIdMap = function() {
+        for (var i = first; i <= last; i++) {
+            idMap[listEntries[i].id] = listEntries[i];
+        }
+    }
+
+    initIdMap();
     selectCurrent();
 
     return {
         entries: listEntries,
+        getCurrent: getCurrent,
         selectNext: selectNext,
-        selectPrev: selectPrev
+        selectPrev: selectPrev,
+        find: find
     };
 };
