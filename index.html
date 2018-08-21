@@ -17,18 +17,21 @@
       <select-list></select-list>
   </div>
 
+  <script src="js/my.js"></script>
+  <script src="js/my.selectlist.js"></script>
+
     <script type="text/x-template" id="select-list-tpl">
         <div>
           <ul>
-              <li v-for="listEntry in listEntries"
+              <li v-for="listEntry in list.entries"
                   v-bind:key="listEntry.id"
                   v-bind:class="{ selected: listEntry.selected }">
                   {{ listEntry.title }}
               </li>
           </ul>
 
-          <input v-on:keydown.down.prevent="selectNextListEntry"
-                 v-on:keydown.up.prevent="selectPrevListEntry"
+          <input v-on:keydown.down.prevent="selectNext"
+                 v-on:keydown.up.prevent="selectPrev"
                  ref="searchEntryInput"
                  autofocus="autofocus"></input>
       </div>
@@ -39,77 +42,24 @@
         template: '#select-list-tpl',
         data: function() {
             return {
-                selectedListEntry: null,
-                listEntries: [
+                list: My.SelectList([
                     { id: 1, title: '500 pieces of paper', selected: false},
                     { id: 2, title: 'One pair of scissors', selected: false},
                     { id: 3, title: 'A bottle of beer', selected: false},
                     { id: 4, title: 'Some kind of well-designed notebook', selected: false},
                     { id: 5, title: 'A handful of beautiful trees', selected: false}
-                ]
-            }
+                ])
+            };
         },
         mounted: function() {
-            // do stuff when mounted
+            // ...
         },
         methods: {
-            selectNextListEntry: function(event) {
-                if (this.listEntries.length === 0) {
-                    console.log('List is empty');
-                    return;
-                }
-
-                if (this.selectedListEntry === null) {
-                    console.log('Select first entry');
-                    this.selectedListEntry = 0;
-
-                    this.listEntries[0].selected = true;
-                    return;
-                }
-
-                if (this.selectedListEntry === this.listEntries.length - 1) {
-                    console.log('End of list. Select first entry');
-
-                    this.listEntries[this.selectedListEntry].selected = false;
-                    this.listEntries[0].selected = true;
-                    this.selectedListEntry = 0;
-                    return;
-                }
-
-                this.listEntries[this.selectedListEntry].selected = false;
-                this.selectedListEntry += 1;
-
-                console.log('Selecting entry index', this.selectedListEntry);
-                this.listEntries[this.selectedListEntry].selected = true;
+            selectNext: function(event) {
+                this.list.selectNext();
             },
-            selectPrevListEntry: function(event) {
-                if (this.listEntries.length === 0) {
-                    console.log('List is empty');
-                    return;
-                }
-
-                if (this.selectedListEntry === null) {
-                    console.log('Select list entry');
-                    this.selectedListEntry = this.listEntries.length - 1;
-
-                    this.listEntries[this.selectedListEntry].selected = true;
-                    return;
-                }
-
-                if (this.selectedListEntry === 0) {
-                    console.log('Start of list. Select last entry');
-
-                    this.listEntries[this.selectedListEntry].selected = false;
-                    this.listEntries[this.listEntries.length - 1].selected = true;
-                    this.selectedListEntry = this.listEntries.length - 1;
-                    return;
-                }
-
-                this.listEntries[this.selectedListEntry].selected = false;
-                this.selectedListEntry -= 1;
-
-                console.log('Selecting entry index', this.selectedListEntry);
-                this.listEntries[this.selectedListEntry].selected = true;
+            selectPrev: function(event) {
+                this.list.selectPrev();
             }
         }
     })
