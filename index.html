@@ -11,10 +11,26 @@
     <script src="js/vue.js"></script>
 </head>
 <body>
-  <div id="app">
-      {{ message }}
+  <div id="app" class="pure-g">
+      <div v-if="page === 'login'" class="pure-u-24-24">
+          <input type="text"
+                 name="username"
+                 value="foo"
+                 ref="loginInputUsername"
+                 v-on:keyup.enter="login()" />
 
-      <select-list></select-list>
+          <input type="password"
+                 name="password"
+                 value="bar"
+                 v-on:keyup.enter="login()" />
+
+         <button v-on:click="login()">login</button>
+      </div>
+
+      <div v-if="page === 'list'" class="pure-u-24-24">
+          <button v-on:click="logout()">logout</button>
+          <select-list></select-list>
+      </div>
   </div>
 
   <script src="js/my.js"></script>
@@ -34,8 +50,7 @@
           <input v-on:keydown.down.prevent="selectNext"
                  v-on:keydown.up.prevent="selectPrev"
                  v-on:keyup.enter="showEntry"
-                 ref="searchEntryInput"
-                 autofocus="autofocus"></input>
+                 ref="searchInputField"/>
       </div>
     </script>
 
@@ -54,7 +69,7 @@
             };
         },
         mounted: function() {
-            // ...
+            this.$refs.searchInputField.focus();
         },
         methods: {
             selectNext: function(event) {
@@ -74,12 +89,23 @@
     </script>
 
     <script>
-      var app = new Vue({
-        el: '#app',
-        data: {
-          message: 'Hello Vue!'
-        }
-      })
+        var app = new Vue({
+            el: '#app',
+            data: {
+                page: 'login'
+            },
+            mounted: function () {
+                this.$refs.loginInputUsername.focus();
+            },
+            methods: {
+                login: function() {
+                    this.page = 'list';
+                },
+                logout: function() {
+                    this.page = 'login';
+                }
+            }
+        })
     </script>
 </body>
 </html>
