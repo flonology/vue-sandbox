@@ -6,30 +6,47 @@
     <meta name="description" content="Creds UI">
     <title>Creds UI</title>
 
-    <link rel="stylesheet" href="css/pure-min.css">
-    <link rel="stylesheet" href="css/user.css">
+    <!-- <link rel="stylesheet" href="css/pure-min.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
     <script src="js/vue.js"></script>
 </head>
 <body>
-  <div id="app" class="pure-g">
-      <div v-if="page === 'login'" class="pure-u-24-24">
-          <input type="text"
-                 name="username"
-                 value="foo"
-                 ref="loginInputUsername"
-                 v-on:keyup.enter="login()" />
+  <div id="app">
+      <div v-if="page === 'login'">
+          <form v-on:submit.prevent="login()">
+              <fieldset>
+                  <legend>Please login</legend>
 
-          <input type="password"
-                 name="password"
-                 value="bar"
-                 v-on:keyup.enter="login()" />
+                  <label>Username
+                      <input
+                          type="text"
+                          name="username"
+                          placeholder="Username…"
+                          value="foo"
+                          ref="loginInputUsername" />
+                  </label>
 
-         <button v-on:click="login()">login</button>
+                  <label for="password">
+                      <input type="password" value="bar" />
+                  </label>
+
+                  <button type="submit">Login</button>
+              </fieldset>
+          </form>
       </div>
 
-      <div v-if="page === 'list'" class="pure-u-24-24">
+      <div v-show="page === 'list'">
+          <select-list v-on:show-list-entry="showListEntry"></select-list>
+      </div>
+
+      <div v-if="page === 'entry'">
+          This is the list entry
+          {{ selectedListEntry.id }}: {{ selectedListEntry.title }}
+          <button v-on:click="backToList()">back</button>
+      </div>
+
+      <div v-if="page !== 'login'">
           <button v-on:click="logout()">logout</button>
-          <select-list></select-list>
       </div>
   </div>
 
@@ -38,19 +55,20 @@
 
     <script type="text/x-template" id="select-list-tpl">
         <div>
+            <input
+                v-on:keydown.down.prevent="selectNext"
+                v-on:keydown.up.prevent="selectPrev"
+                v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
+                tabindex="1" />
+
           <ul>
               <li v-for="listEntry in list.entries"
                   v-bind:key="listEntry.id"
                   v-bind:class="{ selected: listEntry.selected }"
-                  v-on:click="openEntry(listEntry.id)">
+                  v-on:click="$emit('show-list-entry', listEntry)">
                   {{ listEntry.title }}
               </li>
           </ul>
-
-          <input v-on:keydown.down.prevent="selectNext"
-                 v-on:keydown.up.prevent="selectPrev"
-                 v-on:keyup.enter="showEntry"
-                 ref="searchInputField"/>
       </div>
     </script>
 
@@ -69,7 +87,7 @@
             };
         },
         mounted: function() {
-            this.$refs.searchInputField.focus();
+            /// …
         },
         methods: {
             selectNext: function(event) {
@@ -77,12 +95,6 @@
             },
             selectPrev: function(event) {
                 this.list.selectPrev();
-            },
-            showEntry: function(event) {
-                console.log(this.list.getCurrent().title);
-            },
-            openEntry: function(listEntryId) {
-                console.log(this.list.find(listEntryId).title);
             }
         }
     })
@@ -92,10 +104,13 @@
         var app = new Vue({
             el: '#app',
             data: {
-                page: 'login'
+                page: 'list',
+                selectedListEntry: null
             },
             mounted: function () {
-                this.$refs.loginInputUsername.focus();
+                if (this.page === 'login') {
+                    this.$refs.loginInputUsername.focus();
+                }
             },
             methods: {
                 login: function() {
@@ -103,6 +118,13 @@
                 },
                 logout: function() {
                     this.page = 'login';
+                },
+                showListEntry: function(selectedListEntry) {
+                    this.selectedListEntry = selectedListEntry;
+                    this.page = 'entry';
+                },
+                backToList: function() {
+                    this.page = 'list';
                 }
             }
         })
