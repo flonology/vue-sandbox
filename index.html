@@ -45,6 +45,28 @@
           <button v-on:click="backToList()">back</button>
       </div>
 
+      <div v-if="page === 'add'">
+        <form>
+            <fieldset>
+                <legend>Add entry</legend>
+
+                <label>Username
+                    <input type="text" name="username" v-model="add.username" />
+                </label>
+
+                <label>Password
+                    <input type="password" name="password" v-model="add.password" />
+                </label>
+
+                <label>Repeat password
+                    <input type="password" name="password_repeat" v-model="add.passwordRepeat" />
+                </label>
+
+                <button type="button" v-on:click.prevent="addEntry()">add</button>
+            </fieldset>
+        </form>
+      </div>
+
       <div v-if="page !== 'login'">
           <button v-on:click="logout()">logout</button>
       </div>
@@ -104,8 +126,13 @@
         var app = new Vue({
             el: '#app',
             data: {
-                page: 'list',
-                selectedListEntry: null
+                page: 'add',
+                selectedListEntry: null,
+                add: {
+                  username: null,
+                  password: null,
+                  passwordRepeat: null
+                }
             },
             mounted: function () {
                 if (this.page === 'login') {
@@ -118,6 +145,14 @@
                 },
                 logout: function() {
                     this.page = 'login';
+                },
+                addEntry: function() {
+                    console.log(
+                      'Adding an entry...',
+                      this.add.username,
+                      this.add.password,
+                      this.add.passwordRepeat
+                    );
                 },
                 showListEntry: function(selectedListEntry) {
                     this.selectedListEntry = selectedListEntry;
