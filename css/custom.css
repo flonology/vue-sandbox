@@ -1,9 +1,27 @@
 body {
-    padding-left: 1em;
-    padding-right: 1em;
     padding-top: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 36em;
 }
 
 .selected {
     background-color: #ff8888;
+}
+
+.form__label {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+}
+
+.form__input {
+    margin-top: 0.5em;
+    display: block;
+}
+.form__textarea {
+    margin-top: 0.5em;
+    width: 100%;
+    height: 8em;
+    display: block;
 }

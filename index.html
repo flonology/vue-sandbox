@@ -17,8 +17,9 @@
               <fieldset>
                   <legend>Please login</legend>
 
-                  <label>Username
+                  <label class="form__label">Username
                       <input
+                          class="form__input"
                           type="text"
                           name="username"
                           placeholder="Username…"
@@ -26,8 +27,8 @@
                           ref="loginInputUsername" />
                   </label>
 
-                  <label for="password">
-                      <input type="password" value="bar" />
+                  <label class="form__label">Password
+                      <input class="form__input" type="password" value="bar" />
                   </label>
 
                   <button type="submit">Login</button>
@@ -52,20 +53,20 @@
             <fieldset>
                 <legend>Add entry</legend>
 
-                <label>Username
-                    <input type="text" name="username" v-model="create.username" />
+                <label class="form__label">Username
+                    <input class="form__input" type="text" name="username" v-model="create.username" />
                 </label>
 
-                <label>Password
-                    <input type="password" name="password" v-model="create.password" />
+                <label class="form__label">Password
+                    <input class="form__input" type="password" name="password" v-model="create.password" />
                 </label>
 
-                <label>Repeat password
-                    <input type="password" name="password_repeat" v-model="create.passwordRepeat" />
+                <label class="form__label">Repeat password
+                    <input class="form__input" type="password" name="password_repeat" v-model="create.passwordRepeat" />
                 </label>
 
-                <label>Notes
-                    <textarea name="notes" v-model="create.notes"></textarea>
+                <label class="form__label">Notes
+                    <textarea class="form__textarea" name="notes" v-model="create.notes"></textarea>
                 </label>
 
                 <button type="button" v-on:click.prevent="createEntry()">create</button>
