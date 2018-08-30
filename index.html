@@ -36,7 +36,9 @@
       </div>
 
       <div v-show="page === 'list'">
-          <select-list v-on:show-list-entry="showListEntry"></select-list>
+          <select-list
+                v-on:show-list-entry="showListEntry"
+                v-on:add-entry="addEntry"></select-list>
       </div>
 
       <div v-if="page === 'entry'">
@@ -51,18 +53,23 @@
                 <legend>Add entry</legend>
 
                 <label>Username
-                    <input type="text" name="username" v-model="add.username" />
+                    <input type="text" name="username" v-model="create.username" />
                 </label>
 
                 <label>Password
-                    <input type="password" name="password" v-model="add.password" />
+                    <input type="password" name="password" v-model="create.password" />
                 </label>
 
                 <label>Repeat password
-                    <input type="password" name="password_repeat" v-model="add.passwordRepeat" />
+                    <input type="password" name="password_repeat" v-model="create.passwordRepeat" />
                 </label>
 
-                <button type="button" v-on:click.prevent="addEntry()">add</button>
+                <label>Notes
+                    <textarea name="notes" v-model="create.notes"></textarea>
+                </label>
+
+                <button type="button" v-on:click.prevent="createEntry()">create</button>
+                <button type="button" v-on:click.prevent="backToList()">cancel</button>
             </fieldset>
         </form>
       </div>
@@ -91,6 +98,8 @@
                   {{ listEntry.title }}
               </li>
           </ul>
+
+          <button v-on:click="$emit('add-entry')">add</button>
       </div>
     </script>
 
@@ -128,10 +137,11 @@
             data: {
                 page: 'add',
                 selectedListEntry: null,
-                add: {
-                  username: null,
-                  password: null,
-                  passwordRepeat: null
+                create: {
+                    username: 'ExampleUser',
+                    password: 'ExamplePass',
+                    passwordRepeat: 'ExamplePassRepeat',
+                    notes: 'Hi, this is an example note'
                 }
             },
             mounted: function () {
@@ -147,11 +157,15 @@
                     this.page = 'login';
                 },
                 addEntry: function() {
+                  this.page = 'add';
+                },
+                createEntry: function() {
                     console.log(
-                      'Adding an entry...',
-                      this.add.username,
-                      this.add.password,
-                      this.add.passwordRepeat
+                        'Creating an entry...',
+                        this.create.username,
+                        this.create.password,
+                        this.create.passwordRepeat,
+                        this.create.notes
                     );
                 },
                 showListEntry: function(selectedListEntry) {
