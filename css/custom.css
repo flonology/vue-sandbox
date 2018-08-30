@@ -5,10 +5,6 @@ body {
     max-width: 36em;
 }
 
-.selected {
-    background-color: #ff8888;
-}
-
 .form__label {
     display: block;
     margin-top: 0.5em;
@@ -31,4 +27,13 @@ body {
     padding: 0;
     margin-top: 1em;
     margin-bottom: 1em;
+}
+
+.list__entry {
+    padding: 0.5em;
+}
+
+.list__entry--selected {
+    background-color: #ddddff;
+    border: 1px dotted black;
 }

@@ -92,9 +92,10 @@
                 tabindex="1" />
 
           <ul class="list">
-              <li v-for="listEntry in list.entries"
+              <li class="list__entry"
+                  v-for="listEntry in list.entries"
                   v-bind:key="listEntry.id"
-                  v-bind:class="{ selected: listEntry.selected }"
+                  v-bind:class="{ 'list__entry--selected': listEntry.selected }"
                   v-on:click="$emit('show-list-entry', listEntry)">
                   {{ listEntry.title }}
               </li>
