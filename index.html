@@ -91,7 +91,7 @@
                 v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
                 tabindex="1" />
 
-          <ul>
+          <ul class="list">
               <li v-for="listEntry in list.entries"
                   v-bind:key="listEntry.id"
                   v-bind:class="{ selected: listEntry.selected }"
@@ -136,7 +136,7 @@
         var app = new Vue({
             el: '#app',
             data: {
-                page: 'add',
+                page: 'list',
                 selectedListEntry: null,
                 create: {
                     username: 'ExampleUser',
