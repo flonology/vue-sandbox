@@ -5,6 +5,20 @@ body {
     max-width: 36em;
 }
 
+fieldset {
+    margin: 0;
+}
+
+.logout {
+    text-align: right;
+}
+
+.button {
+    padding: 0.5em;
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
 .search__input {
     flex-grow: 1;
     margin-left: 1em;
@@ -47,7 +61,10 @@ body {
     padding: 0.7em 0.5em 0.7em 0.5em;
 }
 
-.list__entry--selected {
-    border: 0;
-    box-shadow: 1px 1px 10px #7C85B6;
+.list__indicator {
+    visibility: hidden;
+}
+
+.list__indicator--visible {
+    visibility: visible;
 }

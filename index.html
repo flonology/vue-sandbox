@@ -31,7 +31,7 @@
                       <input class="form__input" type="password" value="bar" />
                   </label>
 
-                  <button type="submit">Login</button>
+                  <button class="button" type="submit">Login</button>
               </fieldset>
           </form>
       </div>
@@ -45,7 +45,7 @@
       <div v-if="page === 'entry'">
           This is the list entry
           {{ selectedListEntry.id }}: {{ selectedListEntry.title }}
-          <button v-on:click="backToList()">back</button>
+          <button class="button" v-on:click="backToList()">back</button>
       </div>
 
       <div v-if="page === 'add'">
@@ -69,14 +69,14 @@
                     <textarea class="form__textarea" name="notes" v-model="create.notes"></textarea>
                 </label>
 
-                <button type="button" v-on:click.prevent="createEntry()">create</button>
-                <button type="button" v-on:click.prevent="backToList()">cancel</button>
+                <button class="button" type="button" v-on:click.prevent="createEntry()">create</button>
+                <button class="button" type="button" v-on:click.prevent="backToList()">cancel</button>
             </fieldset>
         </form>
       </div>
 
-      <div v-if="page !== 'login'">
-          <button v-on:click="logout()">logout</button>
+      <div v-if="page !== 'login'" class="logout">
+          <button class="button" v-on:click="logout()">logout</button>
       </div>
   </div>
 
@@ -97,13 +97,15 @@
               <li class="list__entry"
                   v-for="listEntry in list.entries"
                   v-bind:key="listEntry.id"
-                  v-bind:class="{ 'list__entry--selected': listEntry.selected }"
                   v-on:click="$emit('show-list-entry', listEntry)">
-                  {{ listEntry.title }}
+                  <span class="list__indicator"
+                        v-bind:class="{ 'list__indicator--visible': listEntry.selected }">
+                      ►
+                  </span>{{ listEntry.title }}
               </li>
           </ul>
 
-          <button v-on:click="$emit('add-entry')">add</button>
+          <button class="button" v-on:click="$emit('add-entry')">add</button>
       </div>
     </script>
 
