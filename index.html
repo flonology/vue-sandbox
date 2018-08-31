@@ -85,11 +85,13 @@
 
     <script type="text/x-template" id="select-list-tpl">
         <div>
-            <input
-                v-on:keydown.down.prevent="selectNext"
-                v-on:keydown.up.prevent="selectPrev"
-                v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
-                tabindex="1" />
+            <label class="search__label">Search
+                <input class="search__input"
+                    v-on:keydown.down.prevent="selectNext"
+                    v-on:keydown.up.prevent="selectPrev"
+                    v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
+                    tabindex="1" />
+            </label>
 
           <ul class="list">
               <li class="list__entry"

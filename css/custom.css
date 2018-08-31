@@ -5,6 +5,20 @@ body {
     max-width: 36em;
 }
 
+.search__input {
+    flex-grow: 1;
+    margin-left: 1em;
+    border: 1px solid black;
+    border-radius: 1em;
+    padding: 0.5em 1em 0.5em 1em;
+}
+
+.search__label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
 .form__label {
     display: block;
     margin-top: 0.5em;
@@ -30,10 +44,10 @@ body {
 }
 
 .list__entry {
-    padding: 0.5em;
+    padding: 0.7em 0.5em 0.7em 0.5em;
 }
 
 .list__entry--selected {
-    background-color: #ddddff;
-    border: 1px dotted black;
+    border: 0;
+    box-shadow: 1px 1px 10px #7C85B6;
 }
