@@ -10,7 +10,8 @@ fieldset {
 }
 
 .logout {
-    text-align: right;
+    margin-top: 1em;
+    text-align: center;
 }
 
 .button {

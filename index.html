@@ -22,7 +22,6 @@
                           class="form__input"
                           type="text"
                           name="username"
-                          placeholder="Username…"
                           value="foo"
                           ref="loginInputUsername" />
                   </label>
@@ -43,8 +42,12 @@
       </div>
 
       <div v-if="page === 'entry'">
-          This is the list entry
-          {{ selectedListEntry.id }}: {{ selectedListEntry.title }}
+          {{ selectedListEntry.id }}<br>
+          {{ selectedListEntry.title }}<br>
+          {{ selectedListEntry.url }}<br>
+          {{ selectedListEntry.username }}<br>
+          {{ selectedListEntry.password }}<br>
+          {{ selectedListEntry.notes }}<br>
           <button class="button" v-on:click="backToList()">back</button>
       </div>
 
@@ -52,6 +55,14 @@
         <form>
             <fieldset>
                 <legend>Add entry</legend>
+
+                <label class="form__label">Title
+                    <input class="form__input" type="text" name="title" v-model="create.title" />
+                </label>
+
+                <label class="form__label">Url
+                    <input class="form__input" type="text" name="url" v-model="create.url" />
+                </label>
 
                 <label class="form__label">Username
                     <input class="form__input" type="text" name="username" v-model="create.username" />
@@ -115,11 +126,51 @@
         data: function() {
             return {
                 list: My.SelectList([
-                    { id: 1, title: '500 pieces of paper', selected: false},
-                    { id: 2, title: 'One pair of scissors', selected: false},
-                    { id: 3, title: 'A bottle of beer', selected: false},
-                    { id: 4, title: 'Some kind of well-designed notebook', selected: false},
-                    { id: 5, title: 'A handful of beautiful trees', selected: false}
+                    {
+                        id: 1,
+                        title: '500 pieces of paper',
+                        url: 'http://pieces.example.com',
+                        username: 'john',
+                        password: 'Super Secret 123',
+                        notes: 'Always use A4 for printing',
+                        selected: false
+                    },
+                    {
+                        id: 2,
+                        title: 'One pair of scissors',
+                        url: 'http://scissors.example.org',
+                        username: 'jane',
+                        password: 'You will not guess it',
+                        notes: 'For right handed only',
+                        selected: false
+                    },
+                    {
+                        id: 3,
+                        title: 'A bottle of beer',
+                        url: 'bottle.example.com',
+                        username: 'jeff',
+                        password: 'Jeff Rocks 987',
+                        notes: 'Drink responsibly',
+                        selected: false
+                    },
+                    {
+                        id: 4,
+                        title: 'Some kind of well-designed notebook',
+                        url: 'notebook.example.com',
+                        username: 'joffrey',
+                        password: 'no remorse',
+                        notes: 'Paper is still the easiest',
+                        selected: false
+                    },
+                    {
+                        id: 5,
+                        title: 'A handful of beautiful trees',
+                        url: 'tree.example.com',
+                        username: 'jungle',
+                        password: 'plant some trees 123',
+                        notes: 'Go out for a walk from time to time',
+                        selected: false
+                    }
                 ])
             };
         },
@@ -144,6 +195,8 @@
                 page: 'list',
                 selectedListEntry: null,
                 create: {
+                    title: 'Some Example Title',
+                    url: 'http://www.example.com',
                     username: 'ExampleUser',
                     password: 'ExamplePass',
                     passwordRepeat: 'ExamplePassRepeat',
@@ -168,6 +221,8 @@
                 createEntry: function() {
                     console.log(
                         'Creating an entry...',
+                        this.create.title,
+                        this.create.url,
                         this.create.username,
                         this.create.password,
                         this.create.passwordRepeat,
