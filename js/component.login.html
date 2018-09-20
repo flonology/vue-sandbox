@@ -1,0 +1,38 @@
+<script type="text/x-template" id="login-tpl">
+    <form v-on:submit.prevent="login()">
+        <fieldset>
+            <legend>Please login</legend>
+
+            <label class="form__label">Username
+                <input
+                    class="form__input"
+                    type="text"
+                    name="username"
+                    value="foo"
+                    ref="loginInputUsername" />
+            </label>
+
+            <label class="form__label">Password
+                <input class="form__input" type="password" value="bar" />
+            </label>
+
+            <button class="button" type="submit">Login</button>
+        </fieldset>
+    </form>
+</script>
+
+
+<script>
+    Vue.component('login', {
+        template: '#login-tpl',
+        mounted: function() {
+            this.$refs.loginInputUsername.focus();
+        },
+        methods: {
+            login: function() {
+                console.log('Logging in…');
+                this.$emit('login');
+            }
+        }
+    });
+</script>

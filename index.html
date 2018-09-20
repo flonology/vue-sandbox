@@ -13,26 +13,7 @@
 <body>
   <div id="app">
       <div v-if="page === 'login'">
-          <form v-on:submit.prevent="login()">
-              <fieldset>
-                  <legend>Please login</legend>
-
-                  <label class="form__label">Username
-                      <input
-                          class="form__input"
-                          type="text"
-                          name="username"
-                          value="foo"
-                          ref="loginInputUsername" />
-                  </label>
-
-                  <label class="form__label">Password
-                      <input class="form__input" type="password" value="bar" />
-                  </label>
-
-                  <button class="button" type="submit">Login</button>
-              </fieldset>
-          </form>
+          <login v-on:login="gotoList"></login>
       </div>
 
       <div v-show="page === 'list'">
@@ -42,48 +23,15 @@
       </div>
 
       <div v-if="page === 'entry'">
-          {{ selectedListEntry.id }}<br>
-          {{ selectedListEntry.title }}<br>
-          {{ selectedListEntry.url }}<br>
-          {{ selectedListEntry.username }}<br>
-          {{ selectedListEntry.password }}<br>
-          {{ selectedListEntry.notes }}<br>
-          <button class="button" v-on:click="backToList()">back</button>
+          <list-entry
+                v-on:back-to-list="gotoList"
+                v-bind:entry="selectedListEntry"></list-entry>
       </div>
 
       <div v-if="page === 'add'">
-        <form>
-            <fieldset>
-                <legend>Add entry</legend>
-
-                <label class="form__label">Title
-                    <input class="form__input" type="text" name="title" v-model="create.title" />
-                </label>
-
-                <label class="form__label">Url
-                    <input class="form__input" type="text" name="url" v-model="create.url" />
-                </label>
-
-                <label class="form__label">Username
-                    <input class="form__input" type="text" name="username" v-model="create.username" />
-                </label>
-
-                <label class="form__label">Password
-                    <input class="form__input" type="password" name="password" v-model="create.password" />
-                </label>
-
-                <label class="form__label">Repeat password
-                    <input class="form__input" type="password" name="password_repeat" v-model="create.passwordRepeat" />
-                </label>
-
-                <label class="form__label">Notes
-                    <textarea class="form__textarea" name="notes" v-model="create.notes"></textarea>
-                </label>
-
-                <button class="button" type="button" v-on:click.prevent="createEntry()">create</button>
-                <button class="button" type="button" v-on:click.prevent="backToList()">cancel</button>
-            </fieldset>
-        </form>
+          <add-entry
+                v-on:create-entry="createEntry"
+                v-on:back-to-list="gotoList"></add-entry>
       </div>
 
       <div v-if="page !== 'login'" class="logout">
@@ -94,106 +42,179 @@
   <script src="js/my.js"></script>
   <script src="js/my.selectlist.js"></script>
 
-    <script type="text/x-template" id="select-list-tpl">
-        <div>
-            <label class="search__label">Search
-                <input class="search__input"
-                    v-on:keydown.down.prevent="selectNext"
-                    v-on:keydown.up.prevent="selectPrev"
-                    v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
-                    tabindex="1" />
+  <script type="text/x-template" id="login-tpl">
+    <form v-on:submit.prevent="login()">
+        <fieldset>
+            <legend>Please login</legend>
+
+            <label class="form__label">Username
+                <input
+                    class="form__input"
+                    type="text"
+                    name="username"
+                    value="foo"
+                    ref="loginInputUsername" />
             </label>
 
-          <ul class="list">
-              <li class="list__entry"
-                  v-for="listEntry in list.entries"
-                  v-bind:key="listEntry.id"
-                  v-on:click="$emit('show-list-entry', listEntry)">
-                  <span class="list__indicator"
-                        v-bind:class="{ 'list__indicator--visible': listEntry.selected }">
-                      ►
-                  </span>{{ listEntry.title }}
-              </li>
-          </ul>
+            <label class="form__label">Password
+                <input class="form__input" type="password" value="bar" />
+            </label>
 
-          <button class="button" v-on:click="$emit('add-entry')">add</button>
-      </div>
-    </script>
+            <button class="button" type="submit">Login</button>
+        </fieldset>
+    </form>
+</script>
 
-    <script>
-    Vue.component('select-list', {
-        template: '#select-list-tpl',
-        data: function() {
-            return {
-                list: My.SelectList([
-                    {
-                        id: 1,
-                        title: '500 pieces of paper',
-                        url: 'http://pieces.example.com',
-                        username: 'john',
-                        password: 'Super Secret 123',
-                        notes: 'Always use A4 for printing',
-                        selected: false
-                    },
-                    {
-                        id: 2,
-                        title: 'One pair of scissors',
-                        url: 'http://scissors.example.org',
-                        username: 'jane',
-                        password: 'You will not guess it',
-                        notes: 'For right handed only',
-                        selected: false
-                    },
-                    {
-                        id: 3,
-                        title: 'A bottle of beer',
-                        url: 'bottle.example.com',
-                        username: 'jeff',
-                        password: 'Jeff Rocks 987',
-                        notes: 'Drink responsibly',
-                        selected: false
-                    },
-                    {
-                        id: 4,
-                        title: 'Some kind of well-designed notebook',
-                        url: 'notebook.example.com',
-                        username: 'joffrey',
-                        password: 'no remorse',
-                        notes: 'Paper is still the easiest',
-                        selected: false
-                    },
-                    {
-                        id: 5,
-                        title: 'A handful of beautiful trees',
-                        url: 'tree.example.com',
-                        username: 'jungle',
-                        password: 'plant some trees 123',
-                        notes: 'Go out for a walk from time to time',
-                        selected: false
-                    }
-                ])
-            };
-        },
+
+<script>
+    Vue.component('login', {
+        template: '#login-tpl',
         mounted: function() {
-            /// …
+            this.$refs.loginInputUsername.focus();
         },
         methods: {
-            selectNext: function(event) {
-                this.list.selectNext();
-            },
-            selectPrev: function(event) {
-                this.list.selectPrev();
+            login: function() {
+                console.log('Logging in…');
+                this.$emit('login');
             }
         }
-    })
-    </script>
+    });
+</script>
 
-    <script>
-        var app = new Vue({
-            el: '#app',
-            data: {
-                page: 'list',
-                selectedListEntry: null,
+  <script type="text/x-template" id="select-list-tpl">
+    <div>
+        <label class="search__label">Search
+            <input class="search__input"
+                v-on:keydown.down.prevent="selectNext"
+                v-on:keydown.up.prevent="selectPrev"
+                v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
+                tabindex="1" />
+        </label>
+
+        <ul class="list">
+            <li class="list__entry"
+                v-for="listEntry in list.entries"
+                v-bind:key="listEntry.id"
+                v-on:click="$emit('show-list-entry', listEntry)">
+                <span class="list__indicator"
+                    v-bind:class="{ 'list__indicator--visible': listEntry.selected }">
+                  ►
+                </span>{{ listEntry.title }}
+            </li>
+        </ul>
+
+        <button class="button" v-on:click="$emit('add-entry')">add</button>
+    </div>
+</script>
+
+
+<script>
+Vue.component('select-list', {
+    template: '#select-list-tpl',
+    data: function() {
+        return {
+            list: My.SelectList([
+                {
+                    id: 1,
+                    title: '500 pieces of paper',
+                    url: 'http://pieces.example.com',
+                    username: 'john',
+                    password: 'Super Secret 123',
+                    notes: 'Always use A4 for printing'
+                },
+                {
+                    id: 2,
+                    title: 'One pair of scissors',
+                    url: 'http://scissors.example.org',
+                    username: 'jane',
+                    password: 'You will not guess it',
+                    notes: 'For right handed only'
+                },
+                {
+                    id: 3,
+                    title: 'A bottle of beer',
+                    url: 'bottle.example.com',
+                    username: 'jeff',
+                    password: 'Jeff Rocks 987',
+                    notes: 'Drink responsibly'
+                },
+                {
+                    id: 4,
+                    title: 'Some kind of well-designed notebook',
+                    url: 'notebook.example.com',
+                    username: 'joffrey',
+                    password: 'no remorse',
+                    notes: 'Paper is still the easiest'
+                },
+                {
+                    id: 5,
+                    title: 'A handful of beautiful trees',
+                    url: 'tree.example.com',
+                    username: 'jungle',
+                    password: 'plant some trees 123',
+                    notes: 'Go out for a walk from time to time'
+                }
+            ])
+        };
+    },
+    mounted: function() {
+        /// …
+    },
+    methods: {
+        selectNext: function(event) {
+            this.list.selectNext();
+        },
+        selectPrev: function(event) {
+            this.list.selectPrev();
+        }
+    }
+})
+</script>
+
+  <script type="text/x-template" id="add-entry-tpl">
+    <form>
+        <fieldset>
+            <legend>Add entry</legend>
+
+            <label class="form__label">Title
+                <input class="form__input" type="text" name="title" v-model="create.title" />
+            </label>
+
+            <label class="form__label">Url
+                <input class="form__input" type="text" name="url" v-model="create.url" />
+            </label>
+
+            <label class="form__label">Username
+                <input class="form__input" type="text" name="username" v-model="create.username" />
+            </label>
+
+            <label class="form__label">Password
+                <input class="form__input" type="password" name="password" v-model="create.password" />
+            </label>
+
+            <label class="form__label">Repeat password
+                <input class="form__input" type="password" name="password_repeat" v-model="create.passwordRepeat" />
+            </label>
+
+            <label class="form__label">Notes
+                <textarea class="form__textarea" name="notes" v-model="create.notes"></textarea>
+            </label>
+
+            <button class="button" type="button" v-on:click.prevent="createEntry()">create</button>
+            <button class="button" type="button" v-on:click.prevent="backToList()">cancel</button>
+        </fieldset>
+    </form>
+</script>
+
+
+<script>
+    Vue.component('add-entry', {
+        template: '#add-entry-tpl',
+        mounted: function() {
+            // …
+        },
+        data: function() {
+            return {
                 create: {
                     title: 'Some Example Title',
                     url: 'http://www.example.com',
@@ -202,14 +223,61 @@
                     passwordRepeat: 'ExamplePassRepeat',
                     notes: 'Hi, this is an example note'
                 }
+            };
+        },
+        methods: {
+            createEntry: function() {
+                this.$emit('create-entry', this.create);
+            },
+            backToList: function() {
+                this.$emit('back-to-list');
+            }
+        }
+    });
+</script>
+
+  <script type="text/x-template" id="list-entry-tpl">
+    <div>
+        {{ entry.id }}<br>
+        {{ entry.title }}<br>
+        {{ entry.url }}<br>
+        {{ entry.username }}<br>
+        {{ entry.password }}<br>
+        {{ entry.notes }}<br>
+        <button class="button" v-on:click="backToList">back</button>
+    </div>
+</script>
+
+
+<script>
+    Vue.component('list-entry', {
+        template: '#list-entry-tpl',
+        mounted: function() {
+        },
+        data: function() {
+            return {};
+        },
+        props: ['entry'],
+        methods: {
+            backToList: function() {
+                this.$emit('back-to-list');
+            }
+        }
+    });
+</script>
+
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                page: 'login',
+                selectedListEntry: null,
             },
             mounted: function () {
-                if (this.page === 'login') {
-                    this.$refs.loginInputUsername.focus();
-                }
             },
             methods: {
-                login: function() {
+                gotoList: function() {
                     this.page = 'list';
                 },
                 logout: function() {
@@ -218,23 +286,20 @@
                 addEntry: function() {
                   this.page = 'add';
                 },
-                createEntry: function() {
+                createEntry: function(entry) {
                     console.log(
                         'Creating an entry...',
-                        this.create.title,
-                        this.create.url,
-                        this.create.username,
-                        this.create.password,
-                        this.create.passwordRepeat,
-                        this.create.notes
+                        entry.title,
+                        entry.url,
+                        entry.username,
+                        entry.password,
+                        entry.passwordRepeat,
+                        entry.notes
                     );
                 },
                 showListEntry: function(selectedListEntry) {
                     this.selectedListEntry = selectedListEntry;
                     this.page = 'entry';
-                },
-                backToList: function() {
-                    this.page = 'list';
                 }
             }
         })

@@ -1,0 +1,89 @@
+<script type="text/x-template" id="select-list-tpl">
+    <div>
+        <label class="search__label">Search
+            <input class="search__input"
+                v-on:keydown.down.prevent="selectNext"
+                v-on:keydown.up.prevent="selectPrev"
+                v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
+                tabindex="1" />
+        </label>
+
+        <ul class="list">
+            <li class="list__entry"
+                v-for="listEntry in list.entries"
+                v-bind:key="listEntry.id"
+                v-on:click="$emit('show-list-entry', listEntry)">
+                <span class="list__indicator"
+                    v-bind:class="{ 'list__indicator--visible': listEntry.selected }">
+                  ►
+                </span>{{ listEntry.title }}
+            </li>
+        </ul>
+
+        <button class="button" v-on:click="$emit('add-entry')">add</button>
+    </div>
+</script>
+
+
+<script>
+Vue.component('select-list', {
+    template: '#select-list-tpl',
+    data: function() {
+        return {
+            list: My.SelectList([
+                {
+                    id: 1,
+                    title: '500 pieces of paper',
+                    url: 'http://pieces.example.com',
+                    username: 'john',
+                    password: 'Super Secret 123',
+                    notes: 'Always use A4 for printing'
+                },
+                {
+                    id: 2,
+                    title: 'One pair of scissors',
+                    url: 'http://scissors.example.org',
+                    username: 'jane',
+                    password: 'You will not guess it',
+                    notes: 'For right handed only'
+                },
+                {
+                    id: 3,
+                    title: 'A bottle of beer',
+                    url: 'bottle.example.com',
+                    username: 'jeff',
+                    password: 'Jeff Rocks 987',
+                    notes: 'Drink responsibly'
+                },
+                {
+                    id: 4,
+                    title: 'Some kind of well-designed notebook',
+                    url: 'notebook.example.com',
+                    username: 'joffrey',
+                    password: 'no remorse',
+                    notes: 'Paper is still the easiest'
+                },
+                {
+                    id: 5,
+                    title: 'A handful of beautiful trees',
+                    url: 'tree.example.com',
+                    username: 'jungle',
+                    password: 'plant some trees 123',
+                    notes: 'Go out for a walk from time to time'
+                }
+            ])
+        };
+    },
+    mounted: function() {
+        /// …
+    },
+    methods: {
+        selectNext: function(event) {
+            this.list.selectNext();
+        },
+        selectPrev: function(event) {
+            this.list.selectPrev();
+        }
+    }
+})
+</script>

@@ -75,6 +75,7 @@ My.SelectList = function(entries) {
 
     var initIdMap = function() {
         for (var i = first; i <= last; i++) {
+            listEntries[i].selected = false;
             idMap[listEntries[i].id] = listEntries[i];
         }
     }

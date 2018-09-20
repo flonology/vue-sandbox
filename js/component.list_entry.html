@@ -1,0 +1,29 @@
+<script type="text/x-template" id="list-entry-tpl">
+    <div>
+        {{ entry.id }}<br>
+        {{ entry.title }}<br>
+        {{ entry.url }}<br>
+        {{ entry.username }}<br>
+        {{ entry.password }}<br>
+        {{ entry.notes }}<br>
+        <button class="button" v-on:click="backToList">back</button>
+    </div>
+</script>
+
+
+<script>
+    Vue.component('list-entry', {
+        template: '#list-entry-tpl',
+        mounted: function() {
+        },
+        data: function() {
+            return {};
+        },
+        props: ['entry'],
+        methods: {
+            backToList: function() {
+                this.$emit('back-to-list');
+            }
+        }
+    });
+</script>

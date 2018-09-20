@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creds UI">
+    <title>Creds UI</title>
+
+    <!-- <link rel="stylesheet" href="css/pure-min.css"> -->
+    <link rel="stylesheet" href="css/custom.css">
+    <script src="js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+      <div v-if="page === 'login'">
+          <login v-on:login="gotoList"></login>
+      </div>
+
+      <div v-show="page === 'list'">
+          <select-list
+                v-on:show-list-entry="showListEntry"
+                v-on:add-entry="addEntry"></select-list>
+      </div>
+
+      <div v-if="page === 'entry'">
+          <list-entry
+                v-on:back-to-list="gotoList"
+                v-bind:entry="selectedListEntry"></list-entry>
+      </div>
+
+      <div v-if="page === 'add'">
+          <add-entry
+                v-on:create-entry="createEntry"
+                v-on:back-to-list="gotoList"></add-entry>
+      </div>
+
+      <div v-if="page !== 'login'" class="logout">
+          <button class="button" v-on:click="logout()">logout</button>
+      </div>
+  </div>
+
+  <script src="js/my.js"></script>
+  <script src="js/my.selectlist.js"></script>
+
+  [[component.login.html]]
+  [[component.select_list.html]]
+  [[component.add_entry.html]]
+  [[component.list_entry.html]]
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                page: 'login',
+                selectedListEntry: null,
+            },
+            mounted: function () {
+            },
+            methods: {
+                gotoList: function() {
+                    this.page = 'list';
+                },
+                logout: function() {
+                    this.page = 'login';
+                },
+                addEntry: function() {
+                  this.page = 'add';
+                },
+                createEntry: function(entry) {
+                    console.log(
+                        'Creating an entry...',
+                        entry.title,
+                        entry.url,
+                        entry.username,
+                        entry.password,
+                        entry.passwordRepeat,
+                        entry.notes
+                    );
+                },
+                showListEntry: function(selectedListEntry) {
+                    this.selectedListEntry = selectedListEntry;
+                    this.page = 'entry';
+                }
+            }
+        })
+    </script>
+</body>
+</html>
