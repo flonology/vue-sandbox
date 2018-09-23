@@ -1,12 +1,13 @@
 <script type="text/x-template" id="select-list-tpl">
     <div>
-        <label class="search__label">Search
-            <input class="search__input"
+        <div class="search__container">
+            <input class="search__input input--standard"
+                placeholder="Search…"
                 v-on:keydown.down.prevent="selectNext"
                 v-on:keydown.up.prevent="selectPrev"
                 v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
                 tabindex="1" />
-        </label>
+        </div>
 
         <ul class="list">
             <li class="list__entry"

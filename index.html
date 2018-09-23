@@ -6,43 +6,142 @@
     <meta name="description" content="Creds UI">
     <title>Creds UI</title>
 
-    <!-- <link rel="stylesheet" href="css/pure-min.css"> -->
     <link rel="stylesheet" href="css/custom.css">
-    <script src="js/vue.js"></script>
+    <script src="parts/vue.js"></script>
 </head>
+
 <body>
-  <div id="app">
-      <div v-if="page === 'login'">
-          <login v-on:login="gotoList"></login>
-      </div>
+    <div id="app">
+        <div v-if="page === 'login'">
+    <login v-on:login="gotoList"></login>
+</div>
 
-      <div v-show="page === 'list'">
-          <select-list
-                v-on:show-list-entry="showListEntry"
-                v-on:add-entry="addEntry"></select-list>
-      </div>
+<div v-show="page === 'list'">
+    <select-list
+          v-on:show-list-entry="showListEntry"
+          v-on:add-entry="addEntry"></select-list>
+</div>
 
-      <div v-if="page === 'entry'">
-          <list-entry
-                v-on:back-to-list="gotoList"
-                v-bind:entry="selectedListEntry"></list-entry>
-      </div>
+<div v-if="page === 'entry'">
+    <list-entry
+          v-on:back-to-list="gotoList"
+          v-bind:entry="selectedListEntry"></list-entry>
+</div>
 
-      <div v-if="page === 'add'">
-          <add-entry
-                v-on:create-entry="createEntry"
-                v-on:back-to-list="gotoList"></add-entry>
-      </div>
+<div v-if="page === 'add'">
+    <add-entry
+          v-on:create-entry="createEntry"
+          v-on:back-to-list="gotoList"></add-entry>
+</div>
 
-      <div v-if="page !== 'login'" class="logout">
-          <button class="button" v-on:click="logout()">logout</button>
-      </div>
-  </div>
+<div v-if="page !== 'login'" class="logout">
+    <button class="button" v-on:click="logout()">logout</button>
+</div>
 
-  <script src="js/my.js"></script>
-  <script src="js/my.selectlist.js"></script>
+    </div>
 
-  <script type="text/x-template" id="login-tpl">
+<script>
+    var My = {};    
+</script>
+
+<script>
+    My.SelectList = function(entries) {
+        var listEntries = entries;
+        var idMap = [];
+        var first = 0;
+        var last = listEntries.length - 1;
+        var current = 0;
+
+        var isEmpty = function() {
+            return listEntries.length === 0
+        };
+
+        var unselectCurrent = function() {
+            if (isEmpty()) {
+                return;
+            }
+
+            listEntries[current].selected = false;
+        };
+
+        var selectCurrent = function() {
+            if (isEmpty()) {
+                return;
+            }
+
+            listEntries[current].selected = true
+        };
+
+        var selectIndex = function(index) {
+            if (isEmpty()) {
+                return;
+            }
+
+            unselectCurrent();
+            current = index;
+            selectCurrent();
+        };
+
+        var selectNext = function() {
+            if (isEmpty()) {
+                return;
+            }
+
+            if (current === last) {
+                selectIndex(first);
+                return;
+            }
+
+            selectIndex(current + 1);
+        };
+
+        var selectPrev = function() {
+            if (isEmpty()) {
+                return;
+            }
+
+            if (current === first) {
+                selectIndex(last);
+                return;
+            }
+
+            selectIndex(current - 1);
+        };
+
+        var getCurrent = function() {
+            return listEntries[current];
+        };
+
+        var find = function(id) {
+            if (isEmpty()) {
+                return null;
+            }
+
+            return idMap[id];
+        }
+
+        var initIdMap = function() {
+            for (var i = first; i <= last; i++) {
+                listEntries[i].selected = false;
+                idMap[listEntries[i].id] = listEntries[i];
+            }
+        }
+
+        initIdMap();
+        selectCurrent();
+
+        return {
+            entries: listEntries,
+            getCurrent: getCurrent,
+            selectNext: selectNext,
+            selectPrev: selectPrev,
+            find: find
+        };
+    };    
+</script>
+
+
+<script type="text/x-template" id="login-tpl">
     <form v-on:submit.prevent="login()">
         <fieldset>
             <legend>Please login</legend>
@@ -81,15 +180,16 @@
     });
 </script>
 
-  <script type="text/x-template" id="select-list-tpl">
+<script type="text/x-template" id="select-list-tpl">
     <div>
-        <label class="search__label">Search
-            <input class="search__input"
+        <div class="search__container">
+            <input class="search__input input--standard"
+                placeholder="Search…"
                 v-on:keydown.down.prevent="selectNext"
                 v-on:keydown.up.prevent="selectPrev"
                 v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
                 tabindex="1" />
-        </label>
+        </div>
 
         <ul class="list">
             <li class="list__entry"
@@ -171,7 +271,7 @@ Vue.component('select-list', {
 })
 </script>
 
-  <script type="text/x-template" id="add-entry-tpl">
+<script type="text/x-template" id="add-entry-tpl">
     <form>
         <fieldset>
             <legend>Add entry</legend>
@@ -236,7 +336,7 @@ Vue.component('select-list', {
     });
 </script>
 
-  <script type="text/x-template" id="list-entry-tpl">
+<script type="text/x-template" id="list-entry-tpl">
     <div>
         {{ entry.id }}<br>
         {{ entry.title }}<br>
@@ -267,42 +367,43 @@ Vue.component('select-list', {
 </script>
 
 
-    <script>
-        var app = new Vue({
-            el: '#app',
-            data: {
-                page: 'login',
-                selectedListEntry: null,
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            page: 'list',
+            selectedListEntry: null,
+        },
+        mounted: function () {
+        },
+        methods: {
+            gotoList: function() {
+                this.page = 'list';
             },
-            mounted: function () {
+            logout: function() {
+                this.page = 'login';
             },
-            methods: {
-                gotoList: function() {
-                    this.page = 'list';
-                },
-                logout: function() {
-                    this.page = 'login';
-                },
-                addEntry: function() {
-                  this.page = 'add';
-                },
-                createEntry: function(entry) {
-                    console.log(
-                        'Creating an entry...',
-                        entry.title,
-                        entry.url,
-                        entry.username,
-                        entry.password,
-                        entry.passwordRepeat,
-                        entry.notes
-                    );
-                },
-                showListEntry: function(selectedListEntry) {
-                    this.selectedListEntry = selectedListEntry;
-                    this.page = 'entry';
-                }
+            addEntry: function() {
+              this.page = 'add';
+            },
+            createEntry: function(entry) {
+                console.log(
+                    'Creating an entry...',
+                    entry.title,
+                    entry.url,
+                    entry.username,
+                    entry.password,
+                    entry.passwordRepeat,
+                    entry.notes
+                );
+            },
+            showListEntry: function(selectedListEntry) {
+                this.selectedListEntry = selectedListEntry;
+                this.page = 'entry';
             }
-        })
-    </script>
+        }
+    })
+</script>
+
 </body>
 </html>

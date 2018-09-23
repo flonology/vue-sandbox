@@ -1,0 +1,25 @@
+<div v-if="page === 'login'">
+    <login v-on:login="gotoList"></login>
+</div>
+
+<div v-show="page === 'list'">
+    <select-list
+          v-on:show-list-entry="showListEntry"
+          v-on:add-entry="addEntry"></select-list>
+</div>
+
+<div v-if="page === 'entry'">
+    <list-entry
+          v-on:back-to-list="gotoList"
+          v-bind:entry="selectedListEntry"></list-entry>
+</div>
+
+<div v-if="page === 'add'">
+    <add-entry
+          v-on:create-entry="createEntry"
+          v-on:back-to-list="gotoList"></add-entry>
+</div>
+
+<div v-if="page !== 'login'" class="logout">
+    <button class="button" v-on:click="logout()">logout</button>
+</div>

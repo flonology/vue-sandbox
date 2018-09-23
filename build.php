@@ -1,29 +1,19 @@
 #!/usr/bin/env php
 <?php
 $template = file_get_contents('index.tpl.html');
+$parts = scandir('parts');
 
-$template = str_replace(
-    '[[component.login.html]]',
-    file_get_contents('js/component.login.html'),
-    $template
-);
+foreach ($parts as $file) {
+    if ($file === '.')      continue;
+    if ($file === '..')     continue;
 
-$template = str_replace(
-    '[[component.select_list.html]]',
-    file_get_contents('js/component.select_list.html'),
-    $template
-);
+    echo "Processing {$file}…" . PHP_EOL;
 
-$template = str_replace(
-    '[[component.add_entry.html]]',
-    file_get_contents('js/component.add_entry.html'),
-    $template
-);
-
-$template = str_replace(
-    '[[component.list_entry.html]]',
-    file_get_contents('js/component.list_entry.html'),
-    $template
-);
+    $template = str_replace(
+        "[[{$file}]]",
+        file_get_contents("parts/{$file}"),
+        $template
+    );
+}
 
 file_put_contents('index.html', $template);

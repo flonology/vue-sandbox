@@ -1,0 +1,37 @@
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            page: 'list',
+            selectedListEntry: null,
+        },
+        mounted: function () {
+        },
+        methods: {
+            gotoList: function() {
+                this.page = 'list';
+            },
+            logout: function() {
+                this.page = 'login';
+            },
+            addEntry: function() {
+              this.page = 'add';
+            },
+            createEntry: function(entry) {
+                console.log(
+                    'Creating an entry...',
+                    entry.title,
+                    entry.url,
+                    entry.username,
+                    entry.password,
+                    entry.passwordRepeat,
+                    entry.notes
+                );
+            },
+            showListEntry: function(selectedListEntry) {
+                this.selectedListEntry = selectedListEntry;
+                this.page = 'entry';
+            }
+        }
+    })
+</script>

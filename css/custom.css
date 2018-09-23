@@ -22,13 +22,17 @@ fieldset {
 
 .search__input {
     flex-grow: 1;
-    margin-left: 1em;
-    border: 1px solid black;
-    border-radius: 1em;
+    border: 1px solid #aaa;
+    border-radius: 0.5em;
     padding: 0.5em 1em 0.5em 1em;
 }
 
-.search__label {
+.input--standard {
+    font-family: monospace;
+    font-size: 1.25em;
+}
+
+.search__container {
     display: flex;
     align-items: center;
     width: 100%;
