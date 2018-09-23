@@ -1,13 +1,7 @@
 <!doctype html>
 <html lang="de">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Creds UI">
-    <title>Creds UI</title>
-
-    <link rel="stylesheet" href="css/custom.css">
-    <script src="parts/vue.js"></script>
+[[head.html]]
 </head>
 
 <body>
@@ -17,6 +11,42 @@
 
 [[module.my.html]]
 [[module.my.selectlist.html]]
+[[module.my.encryptor.html]]
+
+<script>
+    var api_key = null;
+    var encryptor = My.Encryptor();
+    encryptor.setPassword('Johns Encryption Phrase');
+
+    var getCreds = function(api_key) {
+        axios.get(My.config.api.base_url + My.config.routes.creds, {
+            headers: {'Authorization': 'Bearer ' + api_key},
+        })
+        .then(function (response) {
+            var entries = response.data.data;
+            for (var i = 0; i < entries.length; i += 1) {
+                var cred_item = entries[i].cred_item;
+                console.log(JSON.parse(encryptor.decrypt(cred_item)));
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    axios.post(My.config.api.base_url + My.config.routes.login, {
+        username: 'John Doe',
+        password: 'Johns Secret Password'
+    })
+    .then(function (response) {
+        api_key = response.data;
+        getCreds(api_key);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+</script>
 
 [[component.login.html]]
 [[component.select_list.html]]

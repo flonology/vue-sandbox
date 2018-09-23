@@ -1,13 +1,16 @@
 <!doctype html>
 <html lang="de">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Creds UI">
-    <title>Creds UI</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Creds UI">
+<title>Creds UI</title>
 
-    <link rel="stylesheet" href="css/custom.css">
-    <script src="parts/vue.js"></script>
+<link rel="stylesheet" href="css/custom.css">
+<script src="parts/sjcl.js"></script>
+<script src="parts/axios.min.js"></script>
+<script src="parts/vue.js"></script>
+
 </head>
 
 <body>
@@ -41,7 +44,17 @@
     </div>
 
 <script>
-    var My = {};    
+    var My = {
+        config: {
+            api: {
+                base_url: 'http://localhost:8000/'
+            },
+            routes: {
+                login: 'login',
+                creds: 'user/creds'
+            }
+        }
+    };
 </script>
 
 <script>
@@ -137,9 +150,86 @@
             selectPrev: selectPrev,
             find: find
         };
-    };    
+    };
 </script>
 
+<script>
+    My.Encryptor = function() {
+        var self = {
+            password: null
+        };
+
+        var setPassword = function(password) {
+            self.password = password;
+        };
+
+        var encrypt = function(plain_text) {
+            if (self.password == null) {
+                return null;
+            }
+
+            if (plain_text == '') {
+                return '';
+            }
+
+            return sjcl.encrypt(self.password, plain_text, { ks: 256 })
+        };
+
+        var decrypt = function(encrypted_text) {
+            if (self.password == null) {
+                return null;
+            }
+
+            if (encrypted_text == '') {
+                return '';
+            }
+
+            return sjcl.decrypt(self.password, encrypted_text);
+        };
+
+        return {
+            setPassword: setPassword,
+            encrypt: encrypt,
+            decrypt: decrypt
+        };
+    };
+</script>
+
+
+<script>
+    var api_key = null;
+    var encryptor = My.Encryptor();
+    encryptor.setPassword('Johns Encryption Phrase');
+
+    var getCreds = function(api_key) {
+        axios.get(My.config.api.base_url + My.config.routes.creds, {
+            headers: {'Authorization': 'Bearer ' + api_key},
+        })
+        .then(function (response) {
+            var entries = response.data.data;
+            for (var i = 0; i < entries.length; i += 1) {
+                var cred_item = entries[i].cred_item;
+                console.log(JSON.parse(encryptor.decrypt(cred_item)));
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    axios.post(My.config.api.base_url + My.config.routes.login, {
+        username: 'John Doe',
+        password: 'Johns Secret Password'
+    })
+    .then(function (response) {
+        api_key = response.data;
+        getCreds(api_key);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+</script>
 
 <script type="text/x-template" id="login-tpl">
     <form v-on:submit.prevent="login()">

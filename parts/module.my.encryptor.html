@@ -1,0 +1,41 @@
+<script>
+    My.Encryptor = function() {
+        var self = {
+            password: null
+        };
+
+        var setPassword = function(password) {
+            self.password = password;
+        };
+
+        var encrypt = function(plain_text) {
+            if (self.password == null) {
+                return null;
+            }
+
+            if (plain_text == '') {
+                return '';
+            }
+
+            return sjcl.encrypt(self.password, plain_text, { ks: 256 })
+        };
+
+        var decrypt = function(encrypted_text) {
+            if (self.password == null) {
+                return null;
+            }
+
+            if (encrypted_text == '') {
+                return '';
+            }
+
+            return sjcl.decrypt(self.password, encrypted_text);
+        };
+
+        return {
+            setPassword: setPassword,
+            encrypt: encrypt,
+            decrypt: decrypt
+        };
+    };
+</script>
