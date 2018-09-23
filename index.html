@@ -208,7 +208,9 @@
         .then(function (response) {
             var entries = response.data.data;
             for (var i = 0; i < entries.length; i += 1) {
+                var id = entries[i].id;
                 var cred_item = entries[i].cred_item;
+                console.log(id);
                 console.log(JSON.parse(encryptor.decrypt(cred_item)));
             }
         })
