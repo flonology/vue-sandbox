@@ -1445,7 +1445,12 @@ var samples = [
         "password": "lP?gZJG|nbF",
         "notes": "Placeat occaecati et velit explicabo neque impedit. Quasi sunt suscipit eligendi. Accusamus et voluptatem velit omnis ex nihil. Qui non et cumque consequuntur harum voluptatibus quis vitae."
     }
-]
+];
+
+for (var i = 0; i < samples.length; i++) {
+    samples[i].id = (i + 1);
+}
+
 </script>
 
 <script>
@@ -1710,48 +1715,7 @@ Vue.component('select-list', {
     template: '#select-list-tpl',
     data: function() {
         return {
-            list: My.SelectList([
-                {
-                    id: 1,
-                    title: '500 pieces of paper',
-                    url: 'http://pieces.example.com',
-                    username: 'john',
-                    password: 'Super Secret 123',
-                    notes: 'Always use A4 for printing'
-                },
-                {
-                    id: 2,
-                    title: 'One pair of scissors',
-                    url: 'http://scissors.example.org',
-                    username: 'jane',
-                    password: 'You will not guess it',
-                    notes: 'For right handed only'
-                },
-                {
-                    id: 3,
-                    title: 'A bottle of beer',
-                    url: 'bottle.example.com',
-                    username: 'jeff',
-                    password: 'Jeff Rocks 987',
-                    notes: 'Drink responsibly'
-                },
-                {
-                    id: 4,
-                    title: 'Some kind of well-designed notebook',
-                    url: 'notebook.example.com',
-                    username: 'joffrey',
-                    password: 'no remorse',
-                    notes: 'Paper is still the easiest'
-                },
-                {
-                    id: 5,
-                    title: 'A handful of beautiful trees',
-                    url: 'tree.example.com',
-                    username: 'jungle',
-                    password: 'plant some trees 123',
-                    notes: 'Go out for a walk from time to time'
-                }
-            ])
+            list: My.SelectList(samples)
         };
     },
     mounted: function() {
