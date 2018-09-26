@@ -64,12 +64,9 @@ fieldset {
 
 .list__entry {
     padding: 0.7em 0.5em 0.7em 0.5em;
+    border: 2px solid white;
 }
 
-.list__indicator {
-    visibility: hidden;
-}
-
-.list__indicator--visible {
-    visibility: visible;
+.list__entry--selected {
+    border: 2px solid lightgrey;
 }
