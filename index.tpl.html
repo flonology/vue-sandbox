@@ -37,6 +37,20 @@
         });
     }
 
+    var postCred = function(api_key) {
+        axios.post(My.config.api.base_url + My.config.routes.creds, {
+            'cred_item': encryptor.encrypt(JSON.stringify(samples[8]))
+        }, {
+            headers: {'Authorization': 'Bearer ' + api_key},
+        })
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
     axios.post(My.config.api.base_url + My.config.routes.login, {
         username: 'John Doe',
         password: 'Johns Secret Password'
