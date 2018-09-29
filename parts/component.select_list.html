@@ -28,13 +28,13 @@
 <script>
 Vue.component('select-list', {
     template: '#select-list-tpl',
+    props: [],
     data: function() {
         return {
             list: My.SelectList(samples)
         };
     },
     mounted: function() {
-        /// …
     },
     methods: {
         selectNext: function(event) {

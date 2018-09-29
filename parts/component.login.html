@@ -1,5 +1,7 @@
 <script type="text/x-template" id="login-tpl">
     <form v-on:submit.prevent="login()">
+        {{ errorMessage }}
+
         <fieldset>
             <legend>Please login</legend>
 
@@ -7,16 +9,18 @@
                 <input
                     class="form__input"
                     type="text"
-                    name="username"
-                    value="foo"
+                    v-model="username"
                     ref="loginInputUsername" />
             </label>
 
             <label class="form__label">Password
-                <input class="form__input" type="password" value="bar" />
+                <input
+                    class="form__input"
+                    type="password"
+                    v-model="password" />
             </label>
 
-            <button class="button" type="submit">Login</button>
+            <button class="button" type="submit" ref="loginSubmitButton">Login</button>
         </fieldset>
     </form>
 </script>
@@ -25,13 +29,31 @@
 <script>
     Vue.component('login', {
         template: '#login-tpl',
+        props: ['api'],
+        data: function() {
+            return {
+                username: 'John Doe',
+                password: 'Johns Secret Password',
+                errorMessage: 'Will click login button shortly…'
+            };
+        },
         mounted: function() {
+            var self = this;
             this.$refs.loginInputUsername.focus();
+
+            setTimeout(function() {
+                self.$refs.loginSubmitButton.click();
+            }, 2000);
         },
         methods: {
             login: function() {
-                console.log('Logging in…');
-                this.$emit('login');
+                var self = this;
+
+                this.api.login(this.username, this.password, function() {
+                    self.$emit('logged-in');
+                }, function() {
+                    self.errorMessage = 'Login failed.';
+                });
             }
         }
     });

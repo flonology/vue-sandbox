@@ -9,7 +9,7 @@ function build_index()
         if ($file === '.')      continue;
         if ($file === '..')     continue;
 
-        echo "Processing {$file}…" . PHP_EOL;
+        // echo "Processing {$file}…" . PHP_EOL;
 
         $template = str_replace(
             "[[{$file}]]",
@@ -22,5 +22,8 @@ function build_index()
     return ceil($bytes_written / 1024);
 }
 
-$kb_written = build_index();
-echo "Wrote {$kb_written}kb." . PHP_EOL . PHP_EOL;
+echo "Building every 5 seconds…" . PHP_EOL;
+while (true) {
+    build_index();
+    sleep(5);
+}

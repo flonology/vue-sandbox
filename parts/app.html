@@ -1,11 +1,13 @@
 <div v-if="page === 'login'">
-    <login v-on:login="gotoList"></login>
+    <login
+        v-bind:api="api"
+        v-on:logged-in="gotoList"></login>
 </div>
 
 <div v-show="page === 'list'">
     <select-list
-          v-on:show-list-entry="showListEntry"
-          v-on:add-entry="addEntry"></select-list>
+        v-on:show-list-entry="showListEntry"
+        v-on:add-entry="addEntry"></select-list>
 </div>
 
 <div v-if="page === 'entry'">

@@ -1,0 +1,65 @@
+<script>
+    My.Api = function(vue) {
+        var self = {
+            apiKey: null,
+            vue: vue
+        };
+
+        self.config = function() {
+            return {
+                headers: {'Authorization': 'Bearer ' + self.apiKey}
+            };
+        };
+
+        var login = function(username, password, successCall, errorCall) {
+            var url = My.Config.api.baseUrl + My.Config.api.routes.login;
+
+            axios.post(url, {
+                username: username,
+                password: password
+            })
+            .then(function (response) {
+                self.apiKey = response.data;
+                successCall();
+            })
+            .catch(function (error) {
+                console.log(error);
+                errorCall();
+            });
+        };
+
+
+        var getCreds = function(success, error) {
+            var url = My.Config.api.baseUrl + My.Config.api.routes.creds;
+
+            axios
+                .get(url, self.config())
+                .then(function (response) {
+                    success(response.data.data);
+                })
+                .catch(function (error) {
+                    error();
+                });
+        };
+
+
+        var createCred = function(encryptedCred) {
+            axios.post(My.Config.api.baseUrl + My.Config.api.routes.creds, {
+                'cred_item': encryptedCred
+            }, self.config())
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        };
+
+
+        return {
+            login: login,
+            getCreds: getCreds,
+            createCred: createCred
+        };
+    };
+</script>

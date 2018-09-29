@@ -7,22 +7,24 @@
 <title>Creds UI</title>
 
 <link rel="stylesheet" href="css/custom.css">
-<script src="parts/sjcl.js"></script>
-<script src="parts/axios.min.js"></script>
-<script src="parts/vue.js"></script>
+<script src="vendor/sjcl.js"></script>
+<script src="vendor/axios.min.js"></script>
+<script src="vendor/vue.js"></script>
 
 </head>
 
 <body>
     <div id="app">
         <div v-if="page === 'login'">
-    <login v-on:login="gotoList"></login>
+    <login
+        v-bind:api="api"
+        v-on:logged-in="gotoList"></login>
 </div>
 
 <div v-show="page === 'list'">
     <select-list
-          v-on:show-list-entry="showListEntry"
-          v-on:add-entry="addEntry"></select-list>
+        v-on:show-list-entry="showListEntry"
+        v-on:add-entry="addEntry"></select-list>
 </div>
 
 <div v-if="page === 'entry'">
@@ -1454,16 +1456,84 @@ for (var i = 0; i < samples.length; i++) {
 </script>
 
 <script>
-    var My = {
-        config: {
-            api: {
-                base_url: 'http://localhost:8000/'
-            },
+    var My = {};
+</script>
+
+<script>
+    My.Config = {
+        api: {
+            baseUrl: 'http://localhost:8000/',
             routes: {
                 login: 'login',
                 creds: 'user/creds'
             }
-        }
+        },
+    };
+</script>
+
+<script>
+    My.Api = function(vue) {
+        var self = {
+            apiKey: null,
+            vue: vue
+        };
+
+        self.config = function() {
+            return {
+                headers: {'Authorization': 'Bearer ' + self.apiKey}
+            };
+        };
+
+        var login = function(username, password, successCall, errorCall) {
+            var url = My.Config.api.baseUrl + My.Config.api.routes.login;
+
+            axios.post(url, {
+                username: username,
+                password: password
+            })
+            .then(function (response) {
+                self.apiKey = response.data;
+                successCall();
+            })
+            .catch(function (error) {
+                console.log(error);
+                errorCall();
+            });
+        };
+
+
+        var getCreds = function(success, error) {
+            var url = My.Config.api.baseUrl + My.Config.api.routes.creds;
+
+            axios
+                .get(url, self.config())
+                .then(function (response) {
+                    success(response.data.data);
+                })
+                .catch(function (error) {
+                    error();
+                });
+        };
+
+
+        var createCred = function(encryptedCred) {
+            axios.post(My.Config.api.baseUrl + My.Config.api.routes.creds, {
+                'cred_item': encryptedCred
+            }, self.config())
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        };
+
+
+        return {
+            login: login,
+            getCreds: getCreds,
+            createCred: createCred
+        };
     };
 </script>
 
@@ -1624,58 +1694,29 @@ for (var i = 0; i < samples.length; i++) {
 
 
 <script>
-    var api_key = null;
     var encryptor = My.Encryptor();
     encryptor.setPassword('Johns Encryption Phrase');
 
-    var getCreds = function(api_key) {
-        axios.get(My.config.api.base_url + My.config.routes.creds, {
-            headers: {'Authorization': 'Bearer ' + api_key},
-        })
-        .then(function (response) {
-            var entries = response.data.data;
-            for (var i = 0; i < entries.length; i += 1) {
-                var id = entries[i].id;
-                var cred_item = entries[i].cred_item;
-                console.log(id);
-                console.log(JSON.parse(encryptor.decrypt(cred_item)));
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+    var getCreds = function() {
+        console.log('Get Creds');
+        api.getCreds(listCreds);
     }
 
-    var postCred = function(api_key) {
-        axios.post(My.config.api.base_url + My.config.routes.creds, {
-            'cred_item': encryptor.encrypt(JSON.stringify(samples[8]))
-        }, {
-            headers: {'Authorization': 'Bearer ' + api_key},
-        })
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+    var listCreds = function(entries) {
+        console.log('List Creds');
+        for (var i = 0; i < entries.length; i += 1) {
+            var id = entries[i].id;
+            var cred_item = entries[i].cred_item;
+            // console.log(id);
+            // console.log(JSON.parse(encryptor.decrypt(cred_item)));
+        }
     }
-
-    axios.post(My.config.api.base_url + My.config.routes.login, {
-        username: 'John Doe',
-        password: 'Johns Secret Password'
-    })
-    .then(function (response) {
-        api_key = response.data;
-        getCreds(api_key);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
-
 </script>
 
 <script type="text/x-template" id="login-tpl">
     <form v-on:submit.prevent="login()">
+        {{ errorMessage }}
+
         <fieldset>
             <legend>Please login</legend>
 
@@ -1683,16 +1724,18 @@ for (var i = 0; i < samples.length; i++) {
                 <input
                     class="form__input"
                     type="text"
-                    name="username"
-                    value="foo"
+                    v-model="username"
                     ref="loginInputUsername" />
             </label>
 
             <label class="form__label">Password
-                <input class="form__input" type="password" value="bar" />
+                <input
+                    class="form__input"
+                    type="password"
+                    v-model="password" />
             </label>
 
-            <button class="button" type="submit">Login</button>
+            <button class="button" type="submit" ref="loginSubmitButton">Login</button>
         </fieldset>
     </form>
 </script>
@@ -1701,13 +1744,31 @@ for (var i = 0; i < samples.length; i++) {
 <script>
     Vue.component('login', {
         template: '#login-tpl',
+        props: ['api'],
+        data: function() {
+            return {
+                username: 'John Doe',
+                password: 'Johns Secret Password',
+                errorMessage: 'Will click login button shortly…'
+            };
+        },
         mounted: function() {
+            var self = this;
             this.$refs.loginInputUsername.focus();
+
+            setTimeout(function() {
+                self.$refs.loginSubmitButton.click();
+            }, 2000);
         },
         methods: {
             login: function() {
-                console.log('Logging in…');
-                this.$emit('login');
+                var self = this;
+
+                this.api.login(this.username, this.password, function() {
+                    self.$emit('logged-in');
+                }, function() {
+                    self.errorMessage = 'Login failed.';
+                });
             }
         }
     });
@@ -1743,13 +1804,13 @@ for (var i = 0; i < samples.length; i++) {
 <script>
 Vue.component('select-list', {
     template: '#select-list-tpl',
+    props: [],
     data: function() {
         return {
             list: My.SelectList(samples)
         };
     },
     mounted: function() {
-        /// …
     },
     methods: {
         selectNext: function(event) {
@@ -1865,8 +1926,9 @@ Vue.component('select-list', {
     var app = new Vue({
         el: '#app',
         data: {
-            page: 'list',
+            page: 'login',
             selectedListEntry: null,
+            api: My.Api()
         },
         mounted: function () {
         },
