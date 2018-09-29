@@ -4,10 +4,14 @@
         data: {
             page: 'login',
             api: My.Api(),
-            creds: [],
+            encryptor: My.Encryptor(),
+            credsEnc: [],
+            credsDec: [],
             selectedListEntry: null,
         },
         mounted: function () {
+            // This should happen after login on seperate page (component)
+            this.encryptor.setPassword('Johns Encryption Phrase');
         },
         methods: {
             gotoList: function() {
@@ -23,14 +27,18 @@
                 var self = this;
 
                 this.api.getCreds(function(creds) {
-                    self.creds = creds;
-                    self.gotoList();
+                    self.credsEnc = creds;
+                    self.decryptCreds();
                 }, function() {
                     // Go to error page here
-                    // Logout (remove api key from api)
+                    // Logout (remove api key from api and password from encryptor)
                     // Go to login
                     console.log('Could not get creds…');
                 });
+            },
+            decryptCreds: function() {
+                this.credsDec = this.encryptor.decryptCreds(this.credsEnc);
+                this.gotoList();
             },
             createEntry: function(entry) {
                 console.log(

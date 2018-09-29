@@ -28,11 +28,15 @@
 <script>
 Vue.component('select-list', {
     template: '#select-list-tpl',
-    props: [],
+    props: ['creds'],
     data: function() {
         return {
-            list: My.SelectList(samples)
         };
+    },
+    computed: {
+        list: function() {
+            return My.SelectList(this.creds);
+        }
     },
     mounted: function() {
     },

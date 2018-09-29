@@ -32,10 +32,29 @@
             return sjcl.decrypt(self.password, encrypted_text);
         };
 
+        var decryptCreds = function(credsEnc) {
+            var decrypted = [];
+
+            for (var i = 0; i < credsEnc.length; i += 1) {
+                var encryptedItem = credsEnc[i].cred_item;
+                var itemId = credsEnc[i].id;
+
+                var decryptedItem = JSON.parse(
+                    decrypt(encryptedItem)
+                );
+
+                decryptedItem.id = itemId;
+                decrypted.push(decryptedItem);
+            }
+
+            return decrypted;
+        }
+
         return {
             setPassword: setPassword,
             encrypt: encrypt,
-            decrypt: decrypt
+            decrypt: decrypt,
+            decryptCreds: decryptCreds
         };
     };
 </script>

@@ -23,6 +23,7 @@
 
 <div v-show="page === 'list'">
     <select-list
+        v-bind:creds='credsDec'
         v-on:show-list-entry="showListEntry"
         v-on:add-entry="addEntry"></select-list>
 </div>
@@ -1455,6 +1456,7 @@ for (var i = 0; i < samples.length; i++) {
 
 </script>
 
+
 <script>
     var My = {};
 </script>
@@ -1511,6 +1513,7 @@ for (var i = 0; i < samples.length; i++) {
                     successCall(response.data.data);
                 })
                 .catch(function (error) {
+                    console.log(error);
                     errorCall();
                 });
         };
@@ -1684,29 +1687,33 @@ for (var i = 0; i < samples.length; i++) {
             return sjcl.decrypt(self.password, encrypted_text);
         };
 
+        var decryptCreds = function(credsEnc) {
+            var decrypted = [];
+
+            for (var i = 0; i < credsEnc.length; i += 1) {
+                var encryptedItem = credsEnc[i].cred_item;
+                var itemId = credsEnc[i].id;
+
+                var decryptedItem = JSON.parse(
+                    decrypt(encryptedItem)
+                );
+
+                decryptedItem.id = itemId;
+                decrypted.push(decryptedItem);
+            }
+
+            return decrypted;
+        }
+
         return {
             setPassword: setPassword,
             encrypt: encrypt,
-            decrypt: decrypt
+            decrypt: decrypt,
+            decryptCreds: decryptCreds
         };
     };
 </script>
 
-
-<script>
-    var encryptor = My.Encryptor();
-    encryptor.setPassword('Johns Encryption Phrase');
-
-    var listCreds = function(entries) {
-        console.log('List Creds');
-        for (var i = 0; i < entries.length; i += 1) {
-            var id = entries[i].id;
-            var cred_item = entries[i].cred_item;
-            // console.log(id);
-            // console.log(JSON.parse(encryptor.decrypt(cred_item)));
-        }
-    }
-</script>
 
 <script type="text/x-template" id="login-tpl">
     <form v-on:submit.prevent="login()">
@@ -1799,11 +1806,15 @@ for (var i = 0; i < samples.length; i++) {
 <script>
 Vue.component('select-list', {
     template: '#select-list-tpl',
-    props: [],
+    props: ['creds'],
     data: function() {
         return {
-            list: My.SelectList(samples)
         };
+    },
+    computed: {
+        list: function() {
+            return My.SelectList(this.creds);
+        }
     },
     mounted: function() {
     },
@@ -1923,10 +1934,14 @@ Vue.component('select-list', {
         data: {
             page: 'login',
             api: My.Api(),
-            creds: [],
+            encryptor: My.Encryptor(),
+            credsEnc: [],
+            credsDec: [],
             selectedListEntry: null,
         },
         mounted: function () {
+            // This should happen after login on seperate page (component)
+            this.encryptor.setPassword('Johns Encryption Phrase');
         },
         methods: {
             gotoList: function() {
@@ -1942,14 +1957,18 @@ Vue.component('select-list', {
                 var self = this;
 
                 this.api.getCreds(function(creds) {
-                    self.creds = creds;
-                    self.gotoList();
+                    self.credsEnc = creds;
+                    self.decryptCreds();
                 }, function() {
                     // Go to error page here
-                    // Logout (remove api key from api)
+                    // Logout (remove api key from api and password from encryptor)
                     // Go to login
                     console.log('Could not get creds…');
                 });
+            },
+            decryptCreds: function() {
+                this.credsDec = this.encryptor.decryptCreds(this.credsEnc);
+                this.gotoList();
             },
             createEntry: function(entry) {
                 console.log(
