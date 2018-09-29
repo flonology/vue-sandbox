@@ -18,7 +18,7 @@
         <div v-if="page === 'login'">
     <login
         v-bind:api="api"
-        v-on:logged-in="gotoList"></login>
+        v-on:logged-in="getCreds"></login>
 </div>
 
 <div v-show="page === 'list'">
@@ -1502,16 +1502,16 @@ for (var i = 0; i < samples.length; i++) {
         };
 
 
-        var getCreds = function(success, error) {
+        var getCreds = function(successCall, errorCall) {
             var url = My.Config.api.baseUrl + My.Config.api.routes.creds;
 
             axios
                 .get(url, self.config())
                 .then(function (response) {
-                    success(response.data.data);
+                    successCall(response.data.data);
                 })
                 .catch(function (error) {
-                    error();
+                    errorCall();
                 });
         };
 
@@ -1696,11 +1696,6 @@ for (var i = 0; i < samples.length; i++) {
 <script>
     var encryptor = My.Encryptor();
     encryptor.setPassword('Johns Encryption Phrase');
-
-    var getCreds = function() {
-        console.log('Get Creds');
-        api.getCreds(listCreds);
-    }
 
     var listCreds = function(entries) {
         console.log('List Creds');
@@ -1927,8 +1922,9 @@ Vue.component('select-list', {
         el: '#app',
         data: {
             page: 'login',
+            api: My.Api(),
+            creds: [],
             selectedListEntry: null,
-            api: My.Api()
         },
         mounted: function () {
         },
@@ -1941,6 +1937,19 @@ Vue.component('select-list', {
             },
             addEntry: function() {
               this.page = 'add';
+            },
+            getCreds: function() {
+                var self = this;
+
+                this.api.getCreds(function(creds) {
+                    self.creds = creds;
+                    self.gotoList();
+                }, function() {
+                    // Go to error page here
+                    // Logout (remove api key from api)
+                    // Go to login
+                    console.log('Could not get creds…');
+                });
             },
             createEntry: function(entry) {
                 console.log(

@@ -29,16 +29,16 @@
         };
 
 
-        var getCreds = function(success, error) {
+        var getCreds = function(successCall, errorCall) {
             var url = My.Config.api.baseUrl + My.Config.api.routes.creds;
 
             axios
                 .get(url, self.config())
                 .then(function (response) {
-                    success(response.data.data);
+                    successCall(response.data.data);
                 })
                 .catch(function (error) {
-                    error();
+                    errorCall();
                 });
         };
 

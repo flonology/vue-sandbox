@@ -3,8 +3,9 @@
         el: '#app',
         data: {
             page: 'login',
+            api: My.Api(),
+            creds: [],
             selectedListEntry: null,
-            api: My.Api()
         },
         mounted: function () {
         },
@@ -17,6 +18,19 @@
             },
             addEntry: function() {
               this.page = 'add';
+            },
+            getCreds: function() {
+                var self = this;
+
+                this.api.getCreds(function(creds) {
+                    self.creds = creds;
+                    self.gotoList();
+                }, function() {
+                    // Go to error page here
+                    // Logout (remove api key from api)
+                    // Go to login
+                    console.log('Could not get creds…');
+                });
             },
             createEntry: function(entry) {
                 console.log(

@@ -20,11 +20,6 @@
     var encryptor = My.Encryptor();
     encryptor.setPassword('Johns Encryption Phrase');
 
-    var getCreds = function() {
-        console.log('Get Creds');
-        api.getCreds(listCreds);
-    }
-
     var listCreds = function(entries) {
         console.log('List Creds');
         for (var i = 0; i < entries.length; i += 1) {

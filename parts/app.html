@@ -1,7 +1,7 @@
 <div v-if="page === 'login'">
     <login
         v-bind:api="api"
-        v-on:logged-in="gotoList"></login>
+        v-on:logged-in="getCreds"></login>
 </div>
 
 <div v-show="page === 'list'">
