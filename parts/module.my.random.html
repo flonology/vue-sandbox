@@ -1,0 +1,60 @@
+<script>
+    My.Random = function() {
+        var self = {
+            charRanges: [
+                { from: 48, to: 57 },   // 0..9
+                { from: 65, to: 90 },   // A..Z
+                { from: 97, to: 122 }   // a..z
+            ]
+        };
+
+
+        var multiRoundRandom = function() {
+            var rounds = parseInt(
+                    Date.now().toString().substr(-2)
+                ) + 1;
+
+            var random = Math.random();
+
+            for (var i = 0; i < rounds; i += 1) {
+                random += Math.random();
+                random /= 2;
+            };
+
+            return random;
+        }
+
+
+        var randomIntBetween = function(min, max) {
+            return Math.floor(
+                multiRoundRandom() * (max - min + 1)
+            ) + min
+        };
+
+
+        var randomChar = function() {
+            var charRange = self.charRanges[
+                randomIntBetween(0, 2)
+            ];
+
+            var charCode = randomIntBetween(charRange.from, charRange.to);
+            return String.fromCharCode(charCode);
+        };
+
+
+        var password = function(length) {
+            var password = '';
+
+            for (var chars = 0; chars < length; chars += 1) {
+                password += randomChar();
+            }
+
+            return password;
+        };
+
+
+        return {
+            password: password
+        };
+    };
+</script>

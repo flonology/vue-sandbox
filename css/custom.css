@@ -20,6 +20,14 @@ fieldset {
     font-weight: bold;
 }
 
+.button__generate {
+    padding: 0.1em;
+    margin-left: 1em;
+    font-variant: small-caps;
+    font-weight: bold;
+    border: 1px solid #aaa;
+}
+
 .search__input {
     flex-grow: 1;
     margin-right: 1em;
@@ -49,6 +57,7 @@ fieldset {
     margin-top: 0.5em;
     display: block;
 }
+
 .form__textarea {
     margin-top: 0.5em;
     width: 100%;
