@@ -1,33 +1,63 @@
 <script type="text/x-template" id="add-entry-tpl">
-    <form>
+    <form autocomplete="off" v-on:submit.prevent="createEntry">
         <fieldset>
             <legend>Add entry</legend>
 
             <label class="form__label">Title
-                <input class="form__input" type="text" name="title" v-model="create.title" />
+                <input
+                    class="form__input"
+                    type="text"
+                    name="title"
+                    autofocus="autofocus"
+                    required="required"
+                    v-model="create.title"
+                />
             </label>
 
             <label class="form__label">Url
-                <input class="form__input" type="text" name="url" v-model="create.url" />
+                <input
+                    class="form__input"
+                    type="url"
+                    name="url"
+                    v-model="create.url"
+                />
             </label>
 
             <label class="form__label">Username
-                <input class="form__input" type="text" name="username" v-model="create.username" />
+                <input
+                    class="form__input"
+                    type="text"
+                    name="username"
+                    v-model="create.username"
+                />
             </label>
 
             <label class="form__label">Password
-                <input class="form__input" type="password" name="password" v-model="create.password" />
+                <input
+                    class="form__input"
+                    type="password"
+                    name="password"
+                    v-model="create.password"
+                />
             </label>
 
             <label class="form__label">Repeat password
-                <input class="form__input" type="password" name="password_repeat" v-model="create.passwordRepeat" />
+                <input
+                    class="form__input"
+                    type="password"
+                    name="password_repeat"
+                    v-model="create.passwordRepeat"
+                />
             </label>
 
             <label class="form__label">Notes
-                <textarea class="form__textarea" name="notes" v-model="create.notes"></textarea>
+                <textarea
+                    class="form__textarea"
+                    name="notes"
+                    v-model="create.notes"></textarea>
             </label>
 
-            <button class="button" type="button" v-on:click.prevent="createEntry()">create</button>
+            <button class="button" type="submit">create</button>
             <button class="button" type="button" v-on:click.prevent="backToList()">cancel</button>
         </fieldset>
     </form>
@@ -53,7 +83,10 @@
             };
         },
         methods: {
-            createEntry: function() {
+            createEntry: function(event) {
+                if (this.create.password !== this.create.passwordRepeat) {
+                    event.target[4].setCustomValidity('Need pw and pw repeat...');
+                }
                 this.$emit('create-entry', this.create);
             },
             backToList: function() {

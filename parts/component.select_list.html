@@ -8,6 +8,8 @@
                 v-on:keydown.up.prevent="selectPrev"
                 v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
                 tabindex="1" />
+
+            <button class="button" v-on:click="$emit('add-entry')">add</button>
         </div>
 
         <ul class="list">
@@ -19,8 +21,6 @@
                 {{ listEntry.title }}
             </li>
         </ul>
-
-        <button class="button" v-on:click="$emit('add-entry')">add</button>
     </div>
 </script>
 
