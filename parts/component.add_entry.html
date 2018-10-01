@@ -1,5 +1,9 @@
 <script type="text/x-template" id="add-entry-tpl">
-    <form autocomplete="off" v-on:submit.prevent="createEntry">
+    <form
+        autocomplete="off"
+        v-on:submit.prevent="createEntry"
+        v-on:change="checkPasswordEquality">
+
         <fieldset>
             <legend>Add entry</legend>
 
@@ -79,18 +83,34 @@
                     password: 'ExamplePass',
                     passwordRepeat: 'ExamplePassRepeat',
                     notes: 'Hi, this is an example note'
-                }
+                },
+                // Used for checking password equality
+                passwordRepeatField: null
             };
         },
         methods: {
             createEntry: function(event) {
-                if (this.create.password !== this.create.passwordRepeat) {
-                    event.target[4].setCustomValidity('Need pw and pw repeat...');
-                }
                 this.$emit('create-entry', this.create);
             },
             backToList: function() {
                 this.$emit('back-to-list');
+            },
+            checkPasswordEquality(event) {
+                if (event.target.name === 'password_repeat') {
+                    this.passwordRepeatField = event.target;
+                }
+
+                if (this.passwordRepeatField === null) {
+                    return;
+                }
+
+                var message = '';
+
+                if (this.create.password !== this.create.passwordRepeat) {
+                    message = 'Password and Password repeat do not match.';
+                }
+
+                this.passwordRepeatField.setCustomValidity(message);
             }
         }
     });
