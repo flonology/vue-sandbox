@@ -41,15 +41,17 @@
                 this.gotoList();
             },
             createEntry: function(entry) {
-                console.log(
-                    'Creating an entry...',
-                    entry.title,
-                    entry.url,
-                    entry.username,
-                    entry.password,
-                    entry.passwordRepeat,
-                    entry.notes
-                );
+                var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
+
+                var successCall = function(createdId) {
+                    console.log('Whohooo!', createdId);
+                }
+
+                var errorCall = function() {
+                    console.log('Oh nooooo....');
+                }
+
+                this.api.createCred(encrypted, successCall, errorCall);
             },
             showListEntry: function(selectedListEntry) {
                 this.selectedListEntry = selectedListEntry;

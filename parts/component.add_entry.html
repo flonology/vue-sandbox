@@ -87,12 +87,17 @@
                     notes: 'Hi, this is an example note'
                 },
                 // Used for checking password equality
+                passwordField: null,
                 passwordRepeatField: null
             };
         },
         methods: {
             createEntry: function(event) {
+                // Make password fields text fields to prevent firefox from asking to save password
+
+                // Make new array and skip passwordRepeat (no need to create that one)
                 this.$emit('create-entry', this.create);
+                // Make them password fields again
             },
             backToList: function() {
                 this.$emit('back-to-list');
@@ -103,6 +108,11 @@
                 this.checkPasswordEquality(event);
             },
             checkPasswordEquality(event) {
+                // Find a better way… maybe refs?
+                if (event.target.name === 'password') {
+                    this.passwordField = event.target;
+                }
+
                 if (event.target.name === 'password_repeat') {
                     this.passwordRepeatField = event.target;
                 }

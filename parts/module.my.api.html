@@ -44,15 +44,16 @@
         };
 
 
-        var createCred = function(encryptedCred) {
+        var createCred = function(encryptedCred, successCall, errorCall) {
             axios.post(My.Config.api.baseUrl + My.Config.api.routes.creds, {
                 'cred_item': encryptedCred
             }, self.config())
             .then(function (response) {
-                console.log(response);
+                successCall(response.data.data.id);
             })
             .catch(function (error) {
                 console.log(error);
+                errorCall();
             });
         };
 
