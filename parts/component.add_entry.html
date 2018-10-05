@@ -1,24 +1,22 @@
 <script type="text/x-template" id="add-entry-tpl">
     <form
         autocomplete="off"
-        v-on:submit.prevent="createEntry"
-        v-on:change="checkPasswordEquality">
+        v-on:change="validate">
 
         <fieldset>
             <legend>Add entry</legend>
 
-            <label class="form__label">Title
+            <label class="form__label">Title <span>{{ error.title }}</span>
                 <input
                     class="form__input"
                     type="text"
                     name="title"
                     autofocus="autofocus"
-                    required="required"
                     v-model="create.title"
                 />
             </label>
 
-            <label class="form__label">Url
+            <label class="form__label">Url</span>
                 <input
                     class="form__input"
                     type="url"
@@ -36,10 +34,10 @@
                 />
             </label>
 
-            <label class="form__label">Password
+            <label class="form__label">Password <span>{{ error.password }}</span>
                 <a
                     class="button__generate"
-                    v-on:click.prevent="generatePassword">Generate</a>
+                    v-on:click="generatePassword">Generate</a>
                 <input
                     class="form__input"
                     type="password"
@@ -64,8 +62,8 @@
                     v-model="create.notes"></textarea>
             </label>
 
-            <button class="button" type="submit">create</button>
-            <button class="button" type="button" v-on:click.prevent="backToList()">cancel</button>
+            <button class="button" type="button" v-on:click="createEntry">create</button>
+            <button class="button" type="button" v-on:click="backToList">cancel</button>
         </fieldset>
     </form>
 </script>
@@ -86,18 +84,29 @@
                     passwordRepeat: 'ExamplePassRepeat',
                     notes: 'Hi, this is an example note'
                 },
-                // Used for checking password equality
-                passwordField: null,
-                passwordRepeatField: null
+                error: {
+                    // …
+                }
             };
         },
         methods: {
             createEntry: function(event) {
-                // Make password fields text fields to prevent firefox from asking to save password
-
-                // Make new array and skip passwordRepeat (no need to create that one)
                 this.$emit('create-entry', this.create);
-                // Make them password fields again
+            },
+            validate: function(event) {
+                this.error = {};
+
+                if (this.create.title == '') {
+                    this.error.title = 'is required.';
+                }
+
+                if (this.create.password == '') {
+                    this.error.password = 'is required.';
+                }
+
+                if (this.create.password != this.create.passwordRepeat) {
+                    this.error.password = 'does not match.';
+                }
             },
             backToList: function() {
                 this.$emit('back-to-list');
@@ -105,29 +114,6 @@
             generatePassword: function(event) {
                 this.create.password = My.Random().password(32);
                 this.create.passwordRepeat = this.create.password;
-                this.checkPasswordEquality(event);
-            },
-            checkPasswordEquality(event) {
-                // Find a better way… maybe refs?
-                if (event.target.name === 'password') {
-                    this.passwordField = event.target;
-                }
-
-                if (event.target.name === 'password_repeat') {
-                    this.passwordRepeatField = event.target;
-                }
-
-                if (this.passwordRepeatField === null) {
-                    return;
-                }
-
-                var message = '';
-
-                if (this.create.password !== this.create.passwordRepeat) {
-                    message = 'Password and repeat do not match.';
-                }
-
-                this.passwordRepeatField.setCustomValidity(message);
             }
         }
     });
