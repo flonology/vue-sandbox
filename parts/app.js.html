@@ -8,6 +8,7 @@
             credsEnc: [],
             credsDec: [],
             selectedListEntry: null,
+            creatingEntry: false
         },
         mounted: function () {
             // This should happen after login on seperate page (component)
@@ -41,6 +42,9 @@
                 this.gotoList();
             },
             createEntry: function(entry) {
+                var self = this;
+
+                self.creatingEntry = true;
                 var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
 
                 var successCall = function(createdId) {
@@ -48,13 +52,18 @@
                     // [ ] Show success message
                     // [ ] Go to list
                     console.log('Whohooo!', createdId);
+                    self.creatingEntry = false;
+                    self.gotoList();
                 }
 
                 var errorCall = function() {
                     console.log('Oh nooooo....');
+                    self.creatingEntry = false;
                 }
 
-                this.api.createCred(encrypted, successCall, errorCall);
+                setTimeout(function() {
+                    self.api.createCred(encrypted, successCall, errorCall);
+                }, 1000);
             },
             showListEntry: function(selectedListEntry) {
                 this.selectedListEntry = selectedListEntry;

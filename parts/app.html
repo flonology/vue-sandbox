@@ -6,7 +6,7 @@
 
 <div v-show="page === 'list'">
     <select-list
-        v-bind:creds='credsDec'
+        v-bind:creds="credsDec"
         v-on:show-list-entry="showListEntry"
         v-on:add-entry="addEntry"></select-list>
 </div>
@@ -19,6 +19,7 @@
 
 <div v-if="page === 'add'">
     <add-entry
+        v-bind:creating-entry="creatingEntry"
         v-on:create-entry="createEntry"
         v-on:back-to-list="gotoList"></add-entry>
 </div>

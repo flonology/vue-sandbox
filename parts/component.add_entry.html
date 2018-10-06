@@ -62,7 +62,7 @@
                     v-model="create.notes"></textarea>
             </label>
 
-            <button class="button" type="button" v-on:click="createEntry">create</button>
+            <button class="button" type="button" v-on:click="createEntry" v-bind:disabled="createDisabled">create</button>
             <button class="button" type="button" v-on:click="backToList">cancel</button>
         </fieldset>
     </form>
@@ -72,7 +72,15 @@
 <script>
     Vue.component('add-entry', {
         template: '#add-entry-tpl',
+        props: ['creatingEntry'],
         mounted: function() {
+            console.log('Creating?', this.creatingEntry);
+            this.validate();
+        },
+        computed: {
+            createDisabled: function() {
+                return this.creatingEntry || this.error.title || this.error.password;
+            }
         },
         data: function() {
             return {
@@ -84,9 +92,7 @@
                     passwordRepeat: 'ExamplePassRepeat',
                     notes: 'Hi, this is an example note'
                 },
-                error: {
-                    // …
-                }
+                error: {}
             };
         },
         methods: {
@@ -114,6 +120,7 @@
             generatePassword: function(event) {
                 this.create.password = My.Random().password(32);
                 this.create.passwordRepeat = this.create.password;
+                this.validate();
             }
         }
     });
