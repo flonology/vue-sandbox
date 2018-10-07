@@ -66,6 +66,10 @@
                 }, 1000);
             },
             showListEntry: function(selectedListEntry) {
+                if (selectedListEntry == null) {
+                    return;
+                }
+
                 this.selectedListEntry = selectedListEntry;
                 this.page = 'entry';
             }
