@@ -3,6 +3,7 @@
         <div class="search__container">
             <input class="search__input input--standard"
                 placeholder="Search…"
+                v-model="searchString"
                 v-on:input="selectNothing"
                 v-on:keydown.down.prevent="selectNext"
                 v-on:keydown.up.prevent="selectPrev"
@@ -18,7 +19,8 @@
                 v-bind:key="listEntry.id"
                 v-on:click="$emit('show-list-entry', listEntry)"
                 v-bind:class="{ 'list__entry--selected': listEntry.selected }">
-                {{ listEntry.title }}
+                {{ listEntry.title }}<br>
+                {{ listEntry.url }}
             </li>
         </ul>
     </div>
@@ -31,11 +33,27 @@ Vue.component('select-list', {
     props: ['creds'],
     data: function() {
         return {
+            searchString: ''
         };
     },
     computed: {
         list: function() {
-            return My.SelectList(this.creds);
+            var creds = this.creds;
+            var searchString = this.searchString.toLowerCase();
+
+            if (searchString.length > 2) {
+                creds = creds.filter(function(entry) {
+                    var title = entry.title.toLowerCase();
+                    var url = entry.url.toLowerCase();
+
+                    return (
+                        title.indexOf(searchString) !== -1 ||
+                        url.indexOf(searchString) !== -1
+                    );
+                });
+            }
+
+            return My.SelectList(creds);
         }
     },
     mounted: function() {
