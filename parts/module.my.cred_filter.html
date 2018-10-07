@@ -1,0 +1,46 @@
+<script>
+    My.CredFilter = function(creds) {
+        var self = {
+            creds: creds,
+            minSearchLength: 3
+        };
+
+        var isInEntry = function(entry, searchString) {
+            return (
+                entry.title.indexOf(searchString) !== -1 ||
+                entry.url.indexOf(searchString) !== -1
+            );
+        };
+
+        var allSearchStringsApply = function(entry, searchStrings) {
+            var searchEntry = {
+                title: entry.title.toLowerCase(),
+                url: entry.url.toLowerCase()
+            };
+
+            return searchStrings.reduce(function(found, searchString) {
+                if (searchString == '') {
+                    return found;
+                }
+
+                return found && isInEntry(searchEntry, searchString);
+            }, true);
+        };
+
+        var search = function(searchString) {
+            if (searchString.length < self.minSearchLength) {
+                return self.creds;
+            }
+
+            var searchStrings = searchString.toLowerCase().split(' ');
+
+            return self.creds.filter(function(entry) {
+                return allSearchStringsApply(entry, searchStrings);
+            });
+        };
+
+        return {
+            search: search
+        };
+    };
+</script>
