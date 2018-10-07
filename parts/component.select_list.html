@@ -15,6 +15,10 @@
 
         <div class="search__entryIndicator">
             {{ list.entries.length }} of {{ creds.length }} entries
+            <span
+                v-on:click="showAll"
+                class="search__showAll"
+                v-bind:class="{ 'search__showAll--hidden': hideShowAll }">SHOW ALL</span>
         </div>
 
         <ul class="list">
@@ -37,19 +41,34 @@ Vue.component('select-list', {
     props: ['creds'],
     data: function() {
         return {
+            showMaxListEntries: 25,
             searchString: ''
         };
     },
     computed: {
         list: function() {
-            return My.SelectList(
-                My.CredFilter(this.creds).search(this.searchString)
-            );
+            var creds = My.CredFilter(this.creds).search(this.searchString);
+
+            if (this.showMaxListEntries) {
+                creds = creds.slice(0, this.showMaxListEntries);
+            }
+
+            return My.SelectList(creds);
+        },
+        hideShowAll: function() {
+            if (this.showMaxListEntries == null) {
+                return true;
+            }
+
+            return false;
         }
     },
     mounted: function() {
     },
     methods: {
+        showAll: function(event) {
+            this.showMaxListEntries = null;
+        },
         selectNext: function(event) {
             this.list.selectNext();
         },

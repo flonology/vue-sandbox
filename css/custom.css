@@ -52,6 +52,14 @@ fieldset {
     margin-top: 0.25em;
 }
 
+.search__showAll {
+    cursor: pointer;
+}
+
+.search__showAll--hidden {
+    display: none;
+}
+
 .form__label {
     display: block;
     margin-top: 0.5em;
