@@ -39,17 +39,31 @@ Vue.component('select-list', {
     computed: {
         list: function() {
             var creds = this.creds;
-            var searchString = this.searchString.toLowerCase();
+            var search = this.searchString.toLowerCase();
 
-            if (searchString.length > 2) {
+            if (search.length > 2) {
+                var searchStrings = search.split(' ');
+
                 creds = creds.filter(function(entry) {
                     var title = entry.title.toLowerCase();
                     var url = entry.url.toLowerCase();
+                    var found = true;
 
-                    return (
-                        title.indexOf(searchString) !== -1 ||
-                        url.indexOf(searchString) !== -1
-                    );
+                    for (var i = 0; i < searchStrings.length; i++) {
+                        var searchString = searchStrings[i];
+                        var foundPart = false;
+
+                        if (searchString == '') {
+                            continue;
+                        }
+
+                        found = found && (
+                            title.indexOf(searchString) !== -1 ||
+                            url.indexOf(searchString) !== -1
+                        );
+                    };
+
+                    return found;
                 });
             }
 
