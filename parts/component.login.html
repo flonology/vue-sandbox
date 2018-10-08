@@ -17,7 +17,8 @@
                 <input
                     class="form__input"
                     type="password"
-                    v-model="password" />
+                    v-model="password"
+                    v-on:input="typingShowHide" />
             </label>
 
             <button class="button" type="submit" ref="loginSubmitButton">Login</button>
@@ -34,7 +35,8 @@
             return {
                 username: 'John Doe',
                 password: 'Johns Secret Password',
-                errorMessage: 'Will click login button shortly…'
+                errorMessage: 'Will click login button shortly…',
+                typingTimeout: 0
             };
         },
         mounted: function() {
@@ -54,6 +56,22 @@
                 }, function() {
                     self.errorMessage = 'Login failed.';
                 });
+            },
+            typingShowHide: function(event) {
+                var self = this;
+
+                if (self.typingTimeout) {
+                    clearTimeout(self.typingTimeout);
+                }
+
+                if (event.target.type !== 'text') {
+                    event.target.type = 'text';
+                }
+
+                self.typingTimeout = setTimeout(function() {
+                    event.target.type = 'password';
+                    self.typingTimeout = 0;
+                }, 750);
             }
         }
     });
