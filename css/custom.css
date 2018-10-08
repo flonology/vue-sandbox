@@ -93,3 +93,35 @@ fieldset {
 .list__entry--selected {
     border: 2px solid lightgrey;
 }
+
+.entryDetail input {
+    font-size: 0.75em;
+}
+
+.entryDetail__title {
+    padding: 0;
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.entryDetail__username {
+    margin-bottom: 1em;
+}
+
+.entryDetail__usernameInput {
+    padding: 0.5em;
+}
+
+.entryDetail__password {
+    margin-bottom: 1em;
+}
+
+.entryDetail__passwordInput {
+    padding: 0.5em;
+}
+
+.entryDetail__notesPreformatted {
+    border: 1px solid lightgrey;
+    padding: 0.5em;
+}

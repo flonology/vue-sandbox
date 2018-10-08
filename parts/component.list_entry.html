@@ -1,11 +1,46 @@
 <script type="text/x-template" id="list-entry-tpl">
-    <div>
-        {{ entry.id }}<br>
-        {{ entry.title }}<br>
-        {{ entry.url }}<br>
-        {{ entry.username }}<br>
-        {{ entry.password }}<br>
-        {{ entry.notes }}<br>
+    <div class="entryDetail">
+        <p class="entryDetail__title">
+            {{ entry.title }}
+        </p>
+
+        <p class="entryDetail__url">
+            <a v-bind:href="entry.url">{{ entry.url }}</a>
+        </p>
+
+        <p class="entryDetail__username">
+            <input
+                class="entryDetail__usernameInput"
+                v-model="entry.username"
+                readonly="readonly"
+                ref="entryDetailUsername" />
+
+            <button
+                class="button"
+                v-on:click="copyToClipboard($event, $refs.entryDetailUsername)">
+                Copy to Clipboard
+            </button>
+        </p>
+
+        <p class="entryDetail__password">
+            <input
+                class="entryDetail__passwordInput"
+                type="password"
+                v-model="entry.password"
+                readonly="readonly"
+                ref="entryDetailPassword" />
+
+            <button
+                class="button"
+                v-on:click="copyToClipboard($event, $refs.entryDetailPassword)">
+                Copy to Clipboard
+            </button>
+        </p>
+
+        <p class="entryDetail__notes">
+            <pre class="entryDetail__notesPreformatted">{{ entry.notes }}</pre>
+        </p>
+
         <button class="button" v-on:click="backToList">back</button>
     </div>
 </script>
@@ -21,6 +56,19 @@
         },
         props: ['entry'],
         methods: {
+            copyToClipboard: function(event, inputField) {
+                var originalInputType = inputField.type;
+
+                if (inputField.type !== 'text') {
+                    inputField.type = 'text';
+                }
+
+                inputField.select();
+                document.execCommand('copy');
+
+                inputField.type = originalInputType;
+                event.target.focus();
+            },
             backToList: function() {
                 this.$emit('back-to-list');
             }
