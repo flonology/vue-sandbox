@@ -43,13 +43,13 @@ Vue.component('select-list', {
         return {
             showMaxListEntries: 25,
             searchString: '',
-            searchResults: 0
+            numSearchResults: 0
         };
     },
     computed: {
         list: function() {
             var creds = My.CredFilter(this.creds).search(this.searchString);
-            this.searchResults = creds.length;
+            this.numSearchResults = creds.length;
 
             if (this.showMaxListEntries) {
                 creds = creds.slice(0, this.showMaxListEntries);
@@ -62,7 +62,7 @@ Vue.component('select-list', {
                 return true;
             }
 
-            if (this.searchResults <= this.showMaxListEntries) {
+            if (this.numSearchResults <= this.showMaxListEntries) {
                 return true;
             }
 
