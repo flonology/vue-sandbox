@@ -61,9 +61,7 @@
                     self.creatingEntry = false;
                 }
 
-                setTimeout(function() {
-                    self.api.createCred(encrypted, successCall, errorCall);
-                }, 1000);
+                self.api.createCred(encrypted, successCall, errorCall);
             },
             showListEntry: function(selectedListEntry) {
                 if (selectedListEntry == null) {
