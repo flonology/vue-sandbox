@@ -8,7 +8,8 @@
             credsEnc: [],
             credsDec: [],
             selectedListEntry: null,
-            creatingEntry: false
+            creatingEntry: false,
+            highlightFirstEntry: true
         },
         mounted: function () {
             // This should happen after login on seperate page (component)
@@ -48,10 +49,19 @@
                 var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
 
                 var successCall = function(createdId) {
-                    // [ ] Add to decList
                     // [ ] Show success message
-                    // [ ] Go to list
-                    console.log('Whohooo!', createdId);
+
+                    var newEntry = {
+                        id: createdId,
+                        title: entry.title,
+                        username: entry.username,
+                        url: entry.url,
+                        password: entry.password,
+                        notes: entry.notes,
+                        selected: false
+                    };
+
+                    self.credsDec.unshift(newEntry);
                     self.creatingEntry = false;
                     self.gotoList();
                 }

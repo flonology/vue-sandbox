@@ -8,7 +8,8 @@
     <select-list
         v-bind:creds="credsDec"
         v-on:show-list-entry="showListEntry"
-        v-on:add-entry="addEntry"></select-list>
+        v-on:add-entry="addEntry"
+        v-bind:highlight-first-entry="highlightFirstEntry"></select-list>
 </div>
 
 <div v-if="page === 'entry'">
