@@ -94,6 +94,10 @@ fieldset {
     border: 2px solid lightgrey;
 }
 
+.list__entry--highlighted {
+    background-color: lightblue;
+}
+
 .entryDetail input {
     font-size: 0.75em;
 }

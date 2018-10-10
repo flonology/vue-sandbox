@@ -9,7 +9,7 @@
             credsDec: [],
             selectedListEntry: null,
             creatingEntry: false,
-            highlightFirstEntry: true
+            highlightEntry: 0
         },
         mounted: function () {
             // This should happen after login on seperate page (component)
@@ -49,8 +49,6 @@
                 var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
 
                 var successCall = function(createdId) {
-                    // [ ] Show success message
-
                     var newEntry = {
                         id: createdId,
                         title: entry.title,
@@ -64,6 +62,11 @@
                     self.credsDec.unshift(newEntry);
                     self.creatingEntry = false;
                     self.gotoList();
+
+                    self.highlightEntry = createdId;
+                    setTimeout(function() {
+                        self.highlightEntry = 0;
+                    }, 1500);
                 }
 
                 var errorCall = function() {

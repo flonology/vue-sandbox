@@ -15,7 +15,7 @@
 
         <div class="search__entryIndicator">
             {{ list.entries.length }} of {{ creds.length }} entries
-            <br>{{ highlightFirstEntry }}
+            <br>{{ highlightEntry }}
             <span
                 v-on:click="showAll"
                 class="search__showAll"
@@ -27,7 +27,10 @@
                 v-for="listEntry in list.entries"
                 v-bind:key="listEntry.id"
                 v-on:click="$emit('show-list-entry', listEntry)"
-                v-bind:class="{ 'list__entry--selected': listEntry.selected }">
+                v-bind:class="{
+                    'list__entry--selected': listEntry.selected,
+                    'list__entry--highlighted': highlightEntry === listEntry.id
+                }">
                 {{ listEntry.title }}<br>
                 {{ listEntry.url }}
             </li>
@@ -39,7 +42,7 @@
 <script>
 Vue.component('select-list', {
     template: '#select-list-tpl',
-    props: ['creds', 'highlightFirstEntry'],
+    props: ['creds', 'highlightEntry'],
     data: function() {
         return {
             showMaxListEntries: 25,
