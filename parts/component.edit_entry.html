@@ -1,0 +1,120 @@
+<script type="text/x-template" id="edit-entry-tpl">
+    <form
+        autocomplete="off"
+        v-on:change="validate">
+
+        <fieldset>
+            <legend>Edit entry</legend>
+
+            <label class="form__label">Title <span>{{ error.title }}</span>
+                <input
+                    class="form__input"
+                    type="text"
+                    name="title"
+                    autofocus="autofocus"
+                    v-model="entry.title"
+                />
+            </label>
+
+            <label class="form__label">Url</span>
+                <input
+                    class="form__input"
+                    type="url"
+                    name="url"
+                    v-model="entry.url"
+                />
+            </label>
+
+            <label class="form__label">Username
+                <input
+                    class="form__input"
+                    type="text"
+                    name="username"
+                    v-model="entry.username"
+                />
+            </label>
+
+            <label class="form__label">Password <span>{{ error.password }}</span>
+                <a
+                    class="button__generate"
+                    v-on:click="generatePassword">Generate</a>
+                <input
+                    class="form__input"
+                    type="password"
+                    name="password"
+                    v-model="entry.password"
+                />
+            </label>
+
+            <label class="form__label">Repeat password
+                <input
+                    class="form__input"
+                    type="password"
+                    name="password_repeat"
+                    v-model="entry.passwordRepeat"
+                />
+            </label>
+
+            <label class="form__label">Notes
+                <textarea
+                    class="form__textarea"
+                    name="notes"
+                    v-model="entry.notes"></textarea>
+            </label>
+
+            <button class="button" type="button" v-on:click="updateEntry" v-bind:disabled="updateDisabled">update</button>
+            <button class="button" type="button" v-on:click="backToList">cancel</button>
+        </fieldset>
+    </form>
+</script>
+
+
+<script>
+    Vue.component('edit-entry', {
+        template: '#edit-entry-tpl',
+        props: ['creatingEntry', 'entry'],
+        mounted: function() {
+            this.validate();
+        },
+        computed: {
+            updateDisabled: function() {
+                return this.creatingEntry || this.error.title || this.error.password;
+            }
+        },
+        data: function() {
+            return {
+                error: {}
+            };
+        },
+        methods: {
+            updateEntry: function(event) {
+                console.log(this.entry.id, this.entry.title);
+                // Remove passwordRepeat from entry
+                this.$emit('update-entry', this.entry);
+            },
+            validate: function(event) {
+                this.error = {};
+
+                if (this.entry.title == '') {
+                    this.error.title = 'is required.';
+                }
+
+                if (this.entry.password == '') {
+                    this.error.password = 'is required.';
+                }
+
+                if (this.entry.password != this.entry.passwordRepeat) {
+                    this.error.password = 'does not match.';
+                }
+            },
+            backToList: function() {
+                this.$emit('back-to-list');
+            },
+            generatePassword: function(event) {
+                this.entry.password = My.Random().password(32);
+                this.entry.passwordRepeat = this.entry.password;
+                this.validate();
+            }
+        }
+    });
+</script>

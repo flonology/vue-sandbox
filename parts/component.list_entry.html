@@ -42,6 +42,7 @@
         </p>
 
         <button class="button" v-on:click="backToList">back</button>
+        <button class="button" v-on:click="editEntry">edit</button>
     </div>
 </script>
 
@@ -71,6 +72,10 @@
             },
             backToList: function() {
                 this.$emit('back-to-list');
+            },
+            editEntry: function() {
+                console.log("Edit");
+                this.$emit('edit-entry');
             }
         }
     });

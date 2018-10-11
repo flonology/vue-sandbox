@@ -25,6 +25,9 @@
             addEntry: function() {
               this.page = 'add';
             },
+            editEntry: function() {
+              this.page = 'edit';
+            },
             getCreds: function() {
                 var self = this;
 
@@ -41,6 +44,9 @@
             decryptCreds: function() {
                 this.credsDec = this.encryptor.decryptCreds(this.credsEnc);
                 this.gotoList();
+            },
+            updateEntry: function(entry) {
+                console.log('Update', entry);
             },
             createEntry: function(entry) {
                 var self = this;
