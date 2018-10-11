@@ -8,7 +8,7 @@
             credsEnc: [],
             credsDec: [],
             selectedListEntry: null,
-            creatingEntry: false,
+            processingEntry: false,
             highlightEntry: 0
         },
         mounted: function () {
@@ -18,6 +18,7 @@
         methods: {
             gotoList: function() {
                 this.page = 'list';
+                this.$refs.selectList.scrollToSavedPosition();
             },
             logout: function() {
                 this.page = 'login';
@@ -45,39 +46,53 @@
                 this.credsDec = this.encryptor.decryptCreds(this.credsEnc);
                 this.gotoList();
             },
-            updateEntry: function(entry) {
-                console.log('Update', entry);
+            flashListEntry: function(entryId) {
+                var self = this;
+                self.highlightEntry = entryId;
+
+                setTimeout(function() {
+                    self.highlightEntry = 0;
+                }, 1500);
             },
-            createEntry: function(entry) {
+            updateEntry: function(id, entry) {
                 var self = this;
 
-                self.creatingEntry = true;
+                self.processingEntry = true;
                 var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
 
-                var successCall = function(createdId) {
-                    var newEntry = {
-                        id: createdId,
-                        title: entry.title,
-                        username: entry.username,
-                        url: entry.url,
-                        password: entry.password,
-                        notes: entry.notes,
-                        selected: false
-                    };
-
-                    self.credsDec.unshift(newEntry);
-                    self.creatingEntry = false;
+                var successCall = function(updatedId) {
+                    self.processingEntry = false;
                     self.gotoList();
-
-                    self.highlightEntry = createdId;
-                    setTimeout(function() {
-                        self.highlightEntry = 0;
-                    }, 1500);
+                    self.flashListEntry(updatedId);
                 }
 
                 var errorCall = function() {
                     console.log('Oh nooooo....');
-                    self.creatingEntry = false;
+                    self.processingEntry = false;
+                }
+
+                self.api.updateCred(id, encrypted, successCall, errorCall);
+            },
+            createEntry: function(entry) {
+                var self = this;
+
+                self.processingEntry = true;
+                var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
+
+                var successCall = function(createdId) {
+                    entry.id = createdId;
+                    entry.selected = false;
+
+                    self.credsDec.unshift(entry);
+                    self.processingEntry = false;
+
+                    self.gotoList();
+                    self.flashListEntry(createdId);
+                }
+
+                var errorCall = function() {
+                    console.log('Oh nooooo....');
+                    self.processingEntry = false;
                 }
 
                 self.api.createCred(encrypted, successCall, errorCall);

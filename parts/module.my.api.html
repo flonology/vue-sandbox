@@ -45,23 +45,45 @@
 
 
         var createCred = function(encryptedCred, successCall, errorCall) {
-            axios.post(My.Config.api.baseUrl + My.Config.api.routes.creds, {
-                'cred_item': encryptedCred
-            }, self.config())
-            .then(function (response) {
-                successCall(response.data.data.id);
-            })
-            .catch(function (error) {
-                console.log(error);
-                errorCall();
-            });
+            var url = My.Config.api.baseUrl + My.Config.api.routes.creds;
+
+            axios
+                .post(url, { 'cred_item': encryptedCred }, self.config())
+                .then(function (response) {
+                    successCall(response.data.data.id);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    errorCall();
+                });
+        };
+
+
+        var updateCred = function(id, encryptedCred, successCall, errorCall) {
+            var url
+                = My.Config.api.baseUrl
+                + My.Config.api.routes.creds + '/'
+                + id;
+
+            axios
+                .put(
+                    url, { 'cred_item': encryptedCred }, self.config()
+                )
+                .then(function (response) {
+                    successCall(response.data.data.id);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    errorCall();
+                });
         };
 
 
         return {
             login: login,
             getCreds: getCreds,
-            createCred: createCred
+            createCred: createCred,
+            updateCred: updateCred
         };
     };
 </script>

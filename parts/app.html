@@ -6,9 +6,10 @@
 
 <div v-show="page === 'list'">
     <select-list
-        v-bind:creds="credsDec"
+        ref="selectList"
         v-on:show-list-entry="showListEntry"
         v-on:add-entry="addEntry"
+        v-bind:creds="credsDec"
         v-bind:highlight-entry="highlightEntry"></select-list>
 </div>
 
@@ -21,7 +22,7 @@
 
 <div v-if="page === 'add'">
     <add-entry
-        v-bind:creating-entry="creatingEntry"
+        v-bind:processing-entry="processingEntry"
         v-on:create-entry="createEntry"
         v-on:back-to-list="gotoList"></add-entry>
 </div>
@@ -29,7 +30,7 @@
 <div v-if="page === 'edit'">
     <edit-entry
         v-bind:entry="selectedListEntry"
-        v-bind:creating-entry="creatingEntry"
+        v-bind:processing-entry="processingEntry"
         v-on:update-entry="updateEntry"
         v-on:back-to-list="gotoList"></edit-entry>
 </div>

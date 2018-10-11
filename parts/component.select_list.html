@@ -7,7 +7,7 @@
                 v-on:input="selectNothing"
                 v-on:keydown.down.prevent="selectNext"
                 v-on:keydown.up.prevent="selectPrev"
-                v-on:keyup.enter="$emit('show-list-entry', list.getCurrent())"
+                v-on:keyup.enter="showListEntry(list.getCurrent())"
                 tabindex="1" />
 
             <button class="button" v-on:click="$emit('add-entry')">add</button>
@@ -25,7 +25,7 @@
             <li class="list__entry"
                 v-for="listEntry in list.entries"
                 v-bind:key="listEntry.id"
-                v-on:click="$emit('show-list-entry', listEntry)"
+                v-on:click="showListEntry(listEntry)"
                 v-bind:class="{
                     'list__entry--selected': listEntry.selected,
                     'list__entry--highlighted': highlightEntry === listEntry.id
@@ -46,7 +46,8 @@ Vue.component('select-list', {
         return {
             showMaxListEntries: 25,
             searchString: '',
-            numSearchResults: 0
+            numSearchResults: 0,
+            scrollPosition: 0
         };
     },
     computed: {
@@ -74,7 +75,26 @@ Vue.component('select-list', {
     },
     mounted: function() {
     },
+    updated: function() {
+    },
     methods: {
+        // Hm, can I call a method via component ref and get its return value?
+        // e. g. getSelectedListEntry? That‘d be nice.
+        scrollToSavedPosition: function() {
+            var self = this;
+
+            if (self.scrollPosition == 0) {
+                return;
+            }
+
+            setTimeout(function() {
+                window.scrollTo({ top: self.scrollPosition, behavior: 'smooth' });
+            }, 50);
+        },
+        showListEntry: function(listEntry) {
+            this.scrollPosition = window.scrollY;
+            this.$emit('show-list-entry', listEntry)
+        },
         showAll: function(event) {
             this.showMaxListEntries = null;
         },

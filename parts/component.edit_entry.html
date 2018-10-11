@@ -62,8 +62,16 @@
                     v-model="entry.notes"></textarea>
             </label>
 
-            <button class="button" type="button" v-on:click="updateEntry" v-bind:disabled="updateDisabled">update</button>
-            <button class="button" type="button" v-on:click="backToList">cancel</button>
+            <button
+                class="button"
+                type="button"
+                v-on:click="updateEntry"
+                v-bind:disabled="updateDisabled">update</button>
+
+            <button
+                class="button"
+                type="button"
+                v-on:click="backToList">cancel</button>
         </fieldset>
     </form>
 </script>
@@ -72,13 +80,14 @@
 <script>
     Vue.component('edit-entry', {
         template: '#edit-entry-tpl',
-        props: ['creatingEntry', 'entry'],
+        props: ['processingEntry', 'entry'],
         mounted: function() {
+            this.entry.passwordRepeat = this.entry.password;
             this.validate();
         },
         computed: {
             updateDisabled: function() {
-                return this.creatingEntry || this.error.title || this.error.password;
+                return this.processingEntry || this.error.title || this.error.password;
             }
         },
         data: function() {
@@ -88,9 +97,13 @@
         },
         methods: {
             updateEntry: function(event) {
-                console.log(this.entry.id, this.entry.title);
-                // Remove passwordRepeat from entry
-                this.$emit('update-entry', this.entry);
+                this.$emit('update-entry', this.entry.id, {
+                    title: this.entry.title,
+                    url: this.entry.url,
+                    username: this.entry.username,
+                    password: this.entry.password,
+                    notes: this.entry.notes
+                });
             },
             validate: function(event) {
                 this.error = {};

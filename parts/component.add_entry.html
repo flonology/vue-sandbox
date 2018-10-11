@@ -72,13 +72,13 @@
 <script>
     Vue.component('add-entry', {
         template: '#add-entry-tpl',
-        props: ['creatingEntry'],
+        props: ['processingEntry'],
         mounted: function() {
             this.validate();
         },
         computed: {
             createDisabled: function() {
-                return this.creatingEntry || this.error.title || this.error.password;
+                return this.processingEntry || this.error.title || this.error.password;
             }
         },
         data: function() {
@@ -96,7 +96,13 @@
         },
         methods: {
             createEntry: function(event) {
-                this.$emit('create-entry', this.create);
+                this.$emit('create-entry', {
+                    title: this.create.title,
+                    url: this.create.url,
+                    username: this.create.username,
+                    password: this.create.password,
+                    notes: this.create.notes
+                });
             },
             validate: function(event) {
                 this.error = {};
