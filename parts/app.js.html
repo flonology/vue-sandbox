@@ -16,9 +16,8 @@
             this.encryptor.setPassword('Johns Encryption Phrase');
         },
         methods: {
-            gotoList: function() {
-                this.page = 'list';
-                this.$refs.selectList.scrollToSavedPosition();
+            gotoCreds: function() {
+                this.page = 'creds';
             },
             logout: function() {
                 this.page = 'login';
@@ -34,17 +33,13 @@
 
                 this.api.getCreds(function(creds) {
                     self.credsEnc = creds;
-                    self.decryptCreds();
+                    self.gotoCreds();
                 }, function() {
                     // Go to error page here
                     // Logout (remove api key from api and password from encryptor)
                     // Go to login
                     console.log('Could not get creds…');
                 });
-            },
-            decryptCreds: function() {
-                this.credsDec = this.encryptor.decryptCreds(this.credsEnc);
-                this.gotoList();
             },
             flashListEntry: function(entryId) {
                 var self = this;

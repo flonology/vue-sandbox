@@ -1,0 +1,61 @@
+<script type="text/x-template" id="creds-tpl">
+    <div id="credscontainer">
+        <creds-select-list
+            v-show="page === 'list'"
+            ref="selectList"
+            v-on:show-list-entry="showListEntry"
+            v-on:add-entry="addEntry"
+            v-bind:creds="decryptedCreds"
+            v-bind:highlight-entry="highlightEntry"></creds-select-list>
+
+        <div v-if="page === 'decrypting'">
+            Decrypting {{ encryptedCreds.length }} entries…
+        </div>
+    </div>
+</script>
+
+
+<script>
+Vue.component('creds', {
+    template: '#creds-tpl',
+    props: ['encryptor', 'encryptedCreds'],
+    data: function() {
+        return {
+            page: '',
+            decryptedCreds: [],
+            highlightEntry: 0
+        };
+    },
+    watch: {
+        encryptedCreds: function() {
+            this.decryptCreds();
+        },
+    },
+    mounted: function() {
+        this.decryptCreds();
+    },
+    updated: function() {
+    },
+    methods: {
+        decryptCreds: function() {
+            this.page = 'decrypting';
+
+            var self = this;
+            setTimeout(function() {
+                self.decryptedCreds = self.encryptor.decryptCreds(self.encryptedCreds);
+                self.gotoList();
+            }, 1500);
+        },
+        gotoList: function() {
+            this.page = 'list';
+            this.$refs.selectList.scrollToSavedPosition();
+        },
+        addEntry: function() {
+            console.log('Not ported yet');
+        },
+        showListEntry: function() {
+            console.log('Not ported yet');
+        }
+    }
+})
+</script>

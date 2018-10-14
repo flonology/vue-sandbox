@@ -4,14 +4,10 @@
         v-on:logged-in="getCreds"></login>
 </div>
 
-<div v-show="page === 'list'">
-    <select-list
-        ref="selectList"
-        v-on:show-list-entry="showListEntry"
-        v-on:add-entry="addEntry"
-        v-bind:creds="credsDec"
-        v-bind:highlight-entry="highlightEntry"></select-list>
-</div>
+<creds
+    v-if="page === 'creds'"
+    v-bind:encryptor="encryptor"
+    v-bind:encrypted-creds="credsEnc"></creds>
 
 <div v-if="page === 'entry'">
     <list-entry

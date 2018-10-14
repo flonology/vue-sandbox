@@ -1,5 +1,5 @@
-<script type="text/x-template" id="select-list-tpl">
-    <div>
+<script type="text/x-template" id="creds-select-list-tpl">
+    <div id="selectlistcontainer">
         <div class="search__container">
             <input class="search__input input--standard"
                 placeholder="Search…"
@@ -39,8 +39,8 @@
 
 
 <script>
-Vue.component('select-list', {
-    template: '#select-list-tpl',
+Vue.component('creds-select-list', {
+    template: '#creds-select-list-tpl',
     props: ['creds', 'highlightEntry'],
     data: function() {
         return {
@@ -93,6 +93,7 @@ Vue.component('select-list', {
         },
         showListEntry: function(listEntry) {
             this.scrollPosition = window.scrollY;
+            console.log(listEntry);
             this.$emit('show-list-entry', listEntry)
         },
         showAll: function(event) {
