@@ -1,11 +1,11 @@
-<script type="text/x-template" id="list-entry-tpl">
+<script type="text/x-template" id="creds-list-entry-tpl">
     <div class="entryDetail">
         <p class="entryDetail__title">
             {{ entry.title }}
         </p>
 
         <p class="entryDetail__url">
-            <a v-bind:href="entry.url">{{ entry.url }}</a>
+            <a v-bind:href="entry.url" target="_blank">{{ entry.url }}</a>
         </p>
 
         <p class="entryDetail__username">
@@ -48,8 +48,8 @@
 
 
 <script>
-    Vue.component('list-entry', {
-        template: '#list-entry-tpl',
+    Vue.component('creds-list-entry', {
+        template: '#creds-list-entry-tpl',
         mounted: function() {
         },
         data: function() {

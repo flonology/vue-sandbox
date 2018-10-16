@@ -6,30 +6,9 @@
 
 <creds
     v-if="page === 'creds'"
+    v-bind:api="api"
     v-bind:encryptor="encryptor"
     v-bind:encrypted-creds="credsEnc"></creds>
-
-<div v-if="page === 'entry'">
-    <list-entry
-          v-on:back-to-list="gotoList"
-          v-bind:entry="selectedListEntry"
-          v-on:edit-entry="editEntry"></list-entry>
-</div>
-
-<div v-if="page === 'add'">
-    <add-entry
-        v-bind:processing-entry="processingEntry"
-        v-on:create-entry="createEntry"
-        v-on:back-to-list="gotoList"></add-entry>
-</div>
-
-<div v-if="page === 'edit'">
-    <edit-entry
-        v-bind:entry="selectedListEntry"
-        v-bind:processing-entry="processingEntry"
-        v-on:update-entry="updateEntry"
-        v-on:back-to-list="gotoList"></edit-entry>
-</div>
 
 <div v-if="page !== 'login'" class="logout">
     <button class="button" v-on:click="logout()">logout</button>

@@ -1,4 +1,4 @@
-<script type="text/x-template" id="add-entry-tpl">
+<script type="text/x-template" id="creds-add-entry-tpl">
     <form
         autocomplete="off"
         v-on:change="validate">
@@ -70,8 +70,8 @@
 
 
 <script>
-    Vue.component('add-entry', {
-        template: '#add-entry-tpl',
+    Vue.component('creds-add-entry', {
+        template: '#creds-add-entry-tpl',
         props: ['processingEntry'],
         mounted: function() {
             this.validate();

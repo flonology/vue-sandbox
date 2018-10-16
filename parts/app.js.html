@@ -6,10 +6,6 @@
             api: My.Api(),
             encryptor: My.Encryptor(),
             credsEnc: [],
-            credsDec: [],
-            selectedListEntry: null,
-            processingEntry: false,
-            highlightEntry: 0
         },
         mounted: function () {
             // This should happen after login on seperate page (component)
@@ -21,12 +17,6 @@
             },
             logout: function() {
                 this.page = 'login';
-            },
-            addEntry: function() {
-              this.page = 'add';
-            },
-            editEntry: function() {
-              this.page = 'edit';
             },
             getCreds: function() {
                 var self = this;
@@ -40,65 +30,6 @@
                     // Go to login
                     console.log('Could not get creds…');
                 });
-            },
-            flashListEntry: function(entryId) {
-                var self = this;
-                self.highlightEntry = entryId;
-
-                setTimeout(function() {
-                    self.highlightEntry = 0;
-                }, 1500);
-            },
-            updateEntry: function(id, entry) {
-                var self = this;
-
-                self.processingEntry = true;
-                var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
-
-                var successCall = function(updatedId) {
-                    self.processingEntry = false;
-                    self.gotoList();
-                    self.flashListEntry(updatedId);
-                }
-
-                var errorCall = function() {
-                    console.log('Oh nooooo....');
-                    self.processingEntry = false;
-                }
-
-                self.api.updateCred(id, encrypted, successCall, errorCall);
-            },
-            createEntry: function(entry) {
-                var self = this;
-
-                self.processingEntry = true;
-                var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
-
-                var successCall = function(createdId) {
-                    entry.id = createdId;
-                    entry.selected = false;
-
-                    self.credsDec.unshift(entry);
-                    self.processingEntry = false;
-
-                    self.gotoList();
-                    self.flashListEntry(createdId);
-                }
-
-                var errorCall = function() {
-                    console.log('Oh nooooo....');
-                    self.processingEntry = false;
-                }
-
-                self.api.createCred(encrypted, successCall, errorCall);
-            },
-            showListEntry: function(selectedListEntry) {
-                if (selectedListEntry == null) {
-                    return;
-                }
-
-                this.selectedListEntry = selectedListEntry;
-                this.page = 'entry';
             }
         }
     })

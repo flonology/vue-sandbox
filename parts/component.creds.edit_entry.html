@@ -1,4 +1,4 @@
-<script type="text/x-template" id="edit-entry-tpl">
+<script type="text/x-template" id="creds-edit-entry-tpl">
     <form
         autocomplete="off"
         v-on:change="validate">
@@ -78,8 +78,8 @@
 
 
 <script>
-    Vue.component('edit-entry', {
-        template: '#edit-entry-tpl',
+    Vue.component('creds-edit-entry', {
+        template: '#creds-edit-entry-tpl',
         props: ['processingEntry', 'entry'],
         mounted: function() {
             this.entry.passwordRepeat = this.entry.password;

@@ -10,7 +10,7 @@
                 v-on:keyup.enter="showListEntry(list.getCurrent())"
                 tabindex="1" />
 
-            <button class="button" v-on:click="$emit('add-entry')">add</button>
+            <button class="button" v-on:click="addNewEntry">add</button>
         </div>
 
         <div class="search__entryIndicator">
@@ -47,7 +47,7 @@ Vue.component('creds-select-list', {
             showMaxListEntries: 25,
             searchString: '',
             numSearchResults: 0,
-            scrollPosition: 0
+            scrollPosition: null
         };
     },
     computed: {
@@ -83,17 +83,22 @@ Vue.component('creds-select-list', {
         scrollToSavedPosition: function() {
             var self = this;
 
-            if (self.scrollPosition == 0) {
+            if (self.scrollPosition === null) {
                 return;
             }
 
             setTimeout(function() {
                 window.scrollTo({ top: self.scrollPosition, behavior: 'smooth' });
             }, 50);
+
+            return "Hallo";
+        },
+        addNewEntry: function() {
+            this.saveScrollPosition();
+            this.$emit('add-entry');
         },
         showListEntry: function(listEntry) {
-            this.scrollPosition = window.scrollY;
-            console.log(listEntry);
+            this.saveScrollPosition();
             this.$emit('show-list-entry', listEntry)
         },
         showAll: function(event) {
@@ -107,6 +112,9 @@ Vue.component('creds-select-list', {
         },
         selectNothing: function(event) {
             this.list.selectNothing();
+        },
+        saveScrollPosition: function() {
+            this.scrollPosition = window.scrollY;
         }
     }
 })

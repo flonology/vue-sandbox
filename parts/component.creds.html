@@ -11,6 +11,28 @@
         <div v-if="page === 'decrypting'">
             Decrypting {{ encryptedCreds.length }} entries…
         </div>
+
+        <div v-if="page === 'entry'">
+            <creds-list-entry
+                  v-on:back-to-list="gotoList"
+                  v-bind:entry="selectedListEntry"
+                  v-on:edit-entry="editEntry"></creds-list-entry>
+        </div>
+
+        <div v-if="page === 'add'">
+            <creds-add-entry
+                v-bind:processing-entry="processingEntry"
+                v-on:create-entry="createEntry"
+                v-on:back-to-list="gotoList"></creds-add-entry>
+        </div>
+
+        <div v-if="page === 'edit'">
+            <creds-edit-entry
+                v-bind:entry="selectedListEntry"
+                v-bind:processing-entry="processingEntry"
+                v-on:update-entry="updateEntry"
+                v-on:back-to-list="gotoList"></creds-edit-entry>
+        </div>
     </div>
 </script>
 
@@ -18,12 +40,14 @@
 <script>
 Vue.component('creds', {
     template: '#creds-tpl',
-    props: ['encryptor', 'encryptedCreds'],
+    props: ['api', 'encryptor', 'encryptedCreds'],
     data: function() {
         return {
             page: '',
             decryptedCreds: [],
-            highlightEntry: 0
+            highlightEntry: 0,
+            processingEntry: false,
+            selectedListEntry: null,
         };
     },
     watch: {
@@ -44,17 +68,76 @@ Vue.component('creds', {
             setTimeout(function() {
                 self.decryptedCreds = self.encryptor.decryptCreds(self.encryptedCreds);
                 self.gotoList();
-            }, 1500);
+            }, 1000);
         },
         gotoList: function() {
             this.page = 'list';
             this.$refs.selectList.scrollToSavedPosition();
         },
         addEntry: function() {
-            console.log('Not ported yet');
+            this.page = 'add';
         },
-        showListEntry: function() {
-            console.log('Not ported yet');
+        editEntry: function() {
+            this.page = 'edit';
+        },
+        flashListEntry: function(entryId) {
+            var self = this;
+            self.highlightEntry = entryId;
+
+            setTimeout(function() {
+                self.highlightEntry = 0;
+            }, 1500);
+        },
+        updateEntry: function(id, entry) {
+            var self = this;
+
+            self.processingEntry = true;
+            var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
+
+            var successCall = function(updatedId) {
+                self.processingEntry = false;
+                self.gotoList();
+                self.flashListEntry(updatedId);
+            }
+
+            var errorCall = function() {
+                console.log('Oh nooooo....');
+                self.processingEntry = false;
+            }
+
+            self.api.updateCred(id, encrypted, successCall, errorCall);
+        },
+        createEntry: function(entry) {
+            var self = this;
+
+            self.processingEntry = true;
+            var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
+
+            var successCall = function(createdId) {
+                entry.id = createdId;
+                entry.selected = false;
+
+                self.decryptedCreds.unshift(entry);
+                self.processingEntry = false;
+
+                self.gotoList();
+                self.flashListEntry(createdId);
+            }
+
+            var errorCall = function() {
+                console.log('Oh nooooo....');
+                self.processingEntry = false;
+            }
+
+            self.api.createCred(encrypted, successCall, errorCall);
+        },
+        showListEntry: function(selectedListEntry) {
+            if (selectedListEntry == null) {
+                return;
+            }
+
+            this.selectedListEntry = selectedListEntry;
+            this.page = 'entry';
         }
     }
 })
