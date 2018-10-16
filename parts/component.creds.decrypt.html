@@ -1,0 +1,78 @@
+<script type="text/x-template" id="creds-decrypt-tpl">
+    <form>
+        <fieldset>
+            <legend>Enter decrypt password</legend>
+
+            {{ message }}
+
+            <label class="form__label">Password
+                <input
+                    class="form__input"
+                    type="password"
+                    v-model="password"
+                    v-on:input="typingShowHide" />
+            </label>
+
+            <button class="button" type="button" v-on:click="decrypt" ref="decryptButton">decrypt</button>
+        </fieldset>
+    </form>
+</script>
+
+
+<script>
+    Vue.component('creds-decrypt', {
+        template: '#creds-decrypt-tpl',
+        props: ['encryptor', 'encryptedCreds'],
+        data: function() {
+            return {
+                password: 'Johns Encryption Phrase',
+                message: 'Placeholder Message'
+            };
+        },
+        mounted: function() {
+            var self = this;
+
+            this.$refs.decryptButton.focus();
+            self.message = 'Clicking in a sec...';
+
+            setTimeout(function() {
+                self.$refs.decryptButton.click();
+            }, 1000);
+        },
+        methods: {
+            decrypt: function() {
+                var self = this;
+                self.message = 'Decrypting ' + this.encryptedCreds.length + ' entries';
+
+                setTimeout(function() {
+                    self.encryptor.setPassword(self.password);
+                    var decryptedCreds = [];
+
+                    try {
+                        decryptedCreds = self.encryptor.decryptCreds(self.encryptedCreds);
+                        self.$emit('creds-decrypted', decryptedCreds);
+                    } catch (e) {
+                        self.message = 'Wrong password.';
+                    };
+                }, 1500);
+            },
+            // Duplicate in login component
+            typingShowHide: function(event) {
+                var self = this;
+
+                if (self.typingTimeout) {
+                    clearTimeout(self.typingTimeout);
+                }
+
+                if (event.target.type !== 'text') {
+                    event.target.type = 'text';
+                }
+
+                self.typingTimeout = setTimeout(function() {
+                    event.target.type = 'password';
+                    self.typingTimeout = 0;
+                }, 750);
+            }
+        }
+    });
+</script>

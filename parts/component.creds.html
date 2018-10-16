@@ -1,38 +1,32 @@
 <script type="text/x-template" id="creds-tpl">
     <div id="credscontainer">
-        <creds-select-list
-            v-show="page === 'list'"
+        <creds-select-list v-show="page === 'list'"
             ref="selectList"
             v-on:show-list-entry="showListEntry"
             v-on:add-entry="addEntry"
             v-bind:creds="decryptedCreds"
             v-bind:highlight-entry="highlightEntry"></creds-select-list>
 
-        <div v-if="page === 'decrypting'">
-            Decrypting {{ encryptedCreds.length }} entries…
-        </div>
+        <creds-decrypt v-if="page === 'decrypt'"
+            v-bind:encrypted-creds="encryptedCreds"
+            v-bind:encryptor="encryptor"
+            v-on:creds-decrypted="credsDecrypted"></creds-decrypt>
 
-        <div v-if="page === 'entry'">
-            <creds-list-entry
-                  v-on:back-to-list="gotoList"
-                  v-bind:entry="selectedListEntry"
-                  v-on:edit-entry="editEntry"></creds-list-entry>
-        </div>
+        <creds-list-entry v-if="page === 'showEntry'"
+              v-on:back-to-list="gotoList"
+              v-bind:entry="selectedListEntry"
+              v-on:edit-entry="editEntry"></creds-list-entry>
 
-        <div v-if="page === 'add'">
-            <creds-add-entry
-                v-bind:processing-entry="processingEntry"
-                v-on:create-entry="createEntry"
-                v-on:back-to-list="gotoList"></creds-add-entry>
-        </div>
+        <creds-add-entry v-if="page === 'add'"
+            v-bind:processing-entry="processingEntry"
+            v-on:create-entry="createEntry"
+            v-on:back-to-list="gotoList"></creds-add-entry>
 
-        <div v-if="page === 'edit'">
-            <creds-edit-entry
-                v-bind:entry="selectedListEntry"
-                v-bind:processing-entry="processingEntry"
-                v-on:update-entry="updateEntry"
-                v-on:back-to-list="gotoList"></creds-edit-entry>
-        </div>
+        <creds-edit-entry v-if="page === 'edit'"
+            v-bind:entry="selectedListEntry"
+            v-bind:processing-entry="processingEntry"
+            v-on:update-entry="updateEntry"
+            v-on:back-to-list="gotoList"></creds-edit-entry>
     </div>
 </script>
 
@@ -43,32 +37,21 @@ Vue.component('creds', {
     props: ['api', 'encryptor', 'encryptedCreds'],
     data: function() {
         return {
-            page: '',
+            page: 'decrypt',
             decryptedCreds: [],
             highlightEntry: 0,
             processingEntry: false,
             selectedListEntry: null,
         };
     },
-    watch: {
-        encryptedCreds: function() {
-            this.decryptCreds();
-        },
-    },
     mounted: function() {
-        this.decryptCreds();
     },
     updated: function() {
     },
     methods: {
-        decryptCreds: function() {
-            this.page = 'decrypting';
-
-            var self = this;
-            setTimeout(function() {
-                self.decryptedCreds = self.encryptor.decryptCreds(self.encryptedCreds);
-                self.gotoList();
-            }, 1000);
+        credsDecrypted: function(decryptedCreds) {
+            this.decryptedCreds = decryptedCreds;
+            this.gotoList();
         },
         gotoList: function() {
             this.page = 'list';
@@ -137,7 +120,7 @@ Vue.component('creds', {
             }
 
             this.selectedListEntry = selectedListEntry;
-            this.page = 'entry';
+            this.page = 'showEntry';
         }
     }
 })
