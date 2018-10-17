@@ -1,9 +1,15 @@
 <script type="text/x-template" id="login-tpl">
     <form v-on:submit.prevent="login()">
-        {{ errorMessage }}
-
         <fieldset>
             <legend>Please login</legend>
+
+            <div v-if="loginMessage" style="background-color: lightgreen;">
+                {{ loginMessage }}
+            </div>
+
+            <div v-if="errorMessage" style="background-color: red;">
+                {{ errorMessage }}
+            </div>
 
             <label class="form__label">Username
                 <input
@@ -22,6 +28,7 @@
             </label>
 
             <button class="button" type="submit" ref="loginSubmitButton">Login</button>
+            <button class="button" type="button" v-on:click="register">Register</button>
         </fieldset>
     </form>
 </script>
@@ -30,7 +37,7 @@
 <script>
     Vue.component('login', {
         template: '#login-tpl',
-        props: ['api'],
+        props: ['api', 'loginMessage'],
         data: function() {
             return {
                 username: 'John Doe',
@@ -44,7 +51,7 @@
             this.$refs.loginInputUsername.focus();
 
             setTimeout(function() {
-                self.$refs.loginSubmitButton.click();
+                // self.$refs.loginSubmitButton.click();
             }, 1000);
         },
         methods: {
@@ -56,6 +63,9 @@
                 }, function() {
                     self.errorMessage = 'Login failed.';
                 });
+            },
+            register: function() {
+                this.$emit('register');
             },
             typingShowHide: function(event) {
                 var self = this;

@@ -8,6 +8,10 @@
             self.password = password;
         };
 
+        var forgetPassword = function() {
+            self.password = null;
+        }
+
         var encrypt = function(plain_text) {
             if (self.password == null) {
                 return null;
@@ -53,6 +57,7 @@
 
         return {
             setPassword: setPassword,
+            forgetPassword: forgetPassword,
             encrypt: encrypt,
             decrypt: decrypt,
             decryptCreds: decryptCreds

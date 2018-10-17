@@ -2,10 +2,11 @@
     var app = new Vue({
         el: '#app',
         data: {
-            page: 'login',
+            page: 'register',
             api: My.Api(),
             encryptor: My.Encryptor(),
             credsEnc: [],
+            loginMessage: ''
         },
         mounted: function () {
         },
@@ -14,6 +15,19 @@
                 this.page = 'creds';
             },
             logout: function() {
+                this.encryptor.forgetPassword();
+                this.loginMessage = '';
+                this.credsEnc = [];
+                this.page = 'login';
+            },
+            register: function() {
+                this.page = 'register';
+            },
+            registerCanceled: function() {
+                this.logout();
+            },
+            registered: function() {
+                this.loginMessage = 'Successfully registered. You may login now :-)';
                 this.page = 'login';
             },
             getCreds: function() {

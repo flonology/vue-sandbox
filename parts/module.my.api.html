@@ -28,6 +28,22 @@
         };
 
 
+        var register = function(username, password, successCall, errorCall) {
+            var url = My.Config.api.baseUrl + My.Config.api.routes.register;
+
+            axios.post(url, {
+                username: username,
+                password: password
+            })
+            .then(function (response) {
+                successCall();
+            })
+            .catch(function (error) {
+                errorCall(error.response);
+            });
+        };
+
+
         var getCreds = function(successCall, errorCall) {
             var url = My.Config.api.baseUrl + My.Config.api.routes.creds;
 
@@ -80,6 +96,7 @@
 
         return {
             login: login,
+            register: register,
             getCreds: getCreds,
             createCred: createCred,
             updateCred: updateCred

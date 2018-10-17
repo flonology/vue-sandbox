@@ -1,0 +1,87 @@
+<script type="text/x-template" id="register-tpl">
+    <form>
+        <fieldset>
+            <legend>Hi! Register here</legend>
+
+            <div v-if="errorMessage" style="background-color: #eeaaaa; padding: 1em;">
+                {{ errorMessage }}
+            </div>
+
+            <label class="form__label">Username
+                <input
+                    class="form__input"
+                    type="text"
+                    ref="registerInputUsername"
+                    v-model="username" />
+            </label>
+
+            <label class="form__label">Password
+                <input
+                    class="form__input"
+                    type="password"
+                    v-model="password"
+                    v-on:input="typingShowHide" />
+            </label>
+
+            <button
+                class="button" type="button"
+                v-on:click="register"
+                ref="registerSubmitButton">register</button>
+
+            <button
+                class="button" type="button"
+                v-on:click="cancel">cancel</button>
+        </fieldset>
+    </form>
+</script>
+
+
+<script>
+    Vue.component('register', {
+        template: '#register-tpl',
+        props: ['api'],
+        data: function() {
+            return {
+                username: 'foo',
+                password: 'bar',
+                errorMessage: '',
+                typingTimeout: 0
+            };
+        },
+        mounted: function() {
+            var self = this;
+            this.$refs.registerInputUsername.focus();
+        },
+        methods: {
+            register: function() {
+                var self = this;
+
+                self.api.register(this.username, this.password, function() {
+                    self.$emit('registered')
+                }, function(error) {
+                    self.errorMessage = error.data;
+                })
+            },
+            cancel: function() {
+                this.$emit('cancel');
+            },
+            // Duplicate
+            typingShowHide: function(event) {
+                var self = this;
+
+                if (self.typingTimeout) {
+                    clearTimeout(self.typingTimeout);
+                }
+
+                if (event.target.type !== 'text') {
+                    event.target.type = 'text';
+                }
+
+                self.typingTimeout = setTimeout(function() {
+                    event.target.type = 'password';
+                    self.typingTimeout = 0;
+                }, 750);
+            }
+        }
+    });
+</script>

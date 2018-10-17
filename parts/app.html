@@ -1,7 +1,16 @@
 <div v-if="page === 'login'">
     <login
+        v-bind:login-message="loginMessage"
         v-bind:api="api"
+        v-on:register="register"
         v-on:logged-in="getCreds"></login>
+</div>
+
+<div v-if="page === 'register'">
+    <register
+        v-bind:api="api"
+        v-on:registered="registered"
+        v-on:cancel="registerCanceled"></register>
 </div>
 
 <creds
@@ -10,6 +19,6 @@
     v-bind:encryptor="encryptor"
     v-bind:encrypted-creds="credsEnc"></creds>
 
-<div v-if="page !== 'login'" class="logout">
+<div v-if="page !== 'login' && page !== 'register'" class="logout">
     <button class="button" v-on:click="logout()">logout</button>
 </div>
