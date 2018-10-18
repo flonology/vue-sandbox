@@ -4,11 +4,13 @@
             apiKey: null
         };
 
+
         self.config = function() {
             return {
                 headers: {'Authorization': 'Bearer ' + self.apiKey}
             };
         };
+
 
         var login = function(username, password, successCall, errorCall) {
             var url = My.Config.api.baseUrl + My.Config.api.routes.login;
@@ -22,7 +24,6 @@
                 successCall();
             })
             .catch(function (error) {
-                console.log(error);
                 errorCall();
             });
         };
@@ -53,8 +54,7 @@
                     successCall(response.data.data);
                 })
                 .catch(function (error) {
-                    console.log(error);
-                    errorCall();
+                    errorCall(error.response);
                 });
         };
 
@@ -68,8 +68,7 @@
                     successCall(response.data.data.id);
                 })
                 .catch(function (error) {
-                    console.log(error);
-                    errorCall();
+                    errorCall(error.response);
                 });
         };
 
@@ -88,9 +87,21 @@
                     successCall(response.data.data.id);
                 })
                 .catch(function (error) {
-                    console.log(error);
-                    errorCall();
+                    errorCall(error.response);
                 });
+        };
+
+
+        var getApiKey = function() {
+            return self.apiKey;
+        };
+
+        var setApiKey = function(apiKey) {
+            return self.apiKey = apiKey;
+        };
+
+        var removeApiKey = function() {
+            self.apiKey = null;
         };
 
 
@@ -99,7 +110,10 @@
             register: register,
             getCreds: getCreds,
             createCred: createCred,
-            updateCred: updateCred
+            updateCred: updateCred,
+            getApiKey: getApiKey,
+            setApiKey: setApiKey,
+            removeApiKey: removeApiKey
         };
     };
 </script>

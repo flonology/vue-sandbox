@@ -1,20 +1,20 @@
-<div v-if="page === 'login'">
-    <login
-        v-bind:login-message="loginMessage"
-        v-bind:api="api"
-        v-on:register="register"
-        v-on:logged-in="getCreds"></login>
-</div>
+<login v-if="page === 'login'"
+    v-bind:login-message="loginMessage"
+    v-bind:api="api"
+    v-on:register="register"
+    v-on:logged-in="getCreds"></login>
 
-<div v-if="page === 'register'">
-    <register
-        v-bind:api="api"
-        v-on:registered="registered"
-        v-on:cancel="registerCanceled"></register>
-</div>
+<unlock v-if="page === 'unlock'"
+    v-on:unlock="unlock"
+    v-on:forgot-pin="forgetUnlock"></unlock>
 
-<creds
-    v-if="page === 'creds'"
+<register v-if="page === 'register'"
+    v-bind:api="api"
+    v-on:registered="registered"
+    v-on:cancel="registerCanceled"></register>
+
+<creds v-if="page === 'creds'"
+    v-on:lock="lock"
     v-bind:api="api"
     v-bind:encryptor="encryptor"
     v-bind:encrypted-creds="credsEnc"></creds>

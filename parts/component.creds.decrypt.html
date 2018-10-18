@@ -33,11 +33,17 @@
             var self = this;
 
             this.$refs.decryptButton.focus();
-            self.message = 'Clicking in a sec...';
 
-            setTimeout(function() {
-                self.$refs.decryptButton.click();
-            }, 1000);
+            if (this.encryptor.hasPassword()) {
+                this.password = this.encryptor.getPassword();
+                this.decrypt();
+            } else {
+                self.message = 'Clicking in half a sec...';
+
+                setTimeout(function() {
+                    self.$refs.decryptButton.click();
+                }, 500);
+            }
         },
         methods: {
             decrypt: function() {
@@ -54,7 +60,7 @@
                     } catch (e) {
                         self.message = 'Wrong password.';
                     };
-                }, 1500);
+                }, 500);
             },
             // Duplicate in login component
             typingShowHide: function(event) {

@@ -1,0 +1,77 @@
+<script type="text/x-template" id="creds-lock-tpl">
+    <form autocomplete="off" v-on:submit.prevent="lock">
+        <fieldset>
+            <legend>Enter pin to lock</legend>
+
+            <label class="form__label">Pin (min. 6 chars)
+                <input
+                    class="form__input"
+                    type="password"
+                    autofocus="autofocus"
+                    v-model="pin"
+                    v-on:input="typingShowHide"
+                />
+            </label>
+
+            <button
+                class="button"
+                type="button"
+                v-on:click="lock"
+                v-bind:disabled="lockDisabled">lock</button>
+
+            <button
+                class="button"
+                type="button"
+                v-on:click="backToList">cancel</button>
+        </fieldset>
+    </form>
+</script>
+
+
+<script>
+    Vue.component('creds-lock', {
+        template: '#creds-lock-tpl',
+        props: [],
+        mounted: function() {
+        },
+        computed: {
+            lockDisabled: function() {
+                return this.pin.length < 6;
+            }
+        },
+        data: function() {
+            return {
+                pin: '123456'
+            };
+        },
+        methods: {
+            lock: function(event) {
+                if (this.lockDisabled) {
+                    return;
+                }
+
+                this.$emit('lock', this.pin);
+            },
+            backToList: function() {
+                this.$emit('back-to-list');
+            },
+            // duplicate
+            typingShowHide: function(event) {
+                var self = this;
+
+                if (self.typingTimeout) {
+                    clearTimeout(self.typingTimeout);
+                }
+
+                if (event.target.type !== 'text') {
+                    event.target.type = 'text';
+                }
+
+                self.typingTimeout = setTimeout(function() {
+                    event.target.type = 'password';
+                    self.typingTimeout = 0;
+                }, 750);
+            }
+        }
+    });
+</script>

@@ -2,22 +2,73 @@
     var app = new Vue({
         el: '#app',
         data: {
-            page: 'register',
+            page: '',
             api: My.Api(),
             encryptor: My.Encryptor(),
             credsEnc: [],
             loginMessage: ''
         },
         mounted: function () {
+            var apiKey = localStorage.getItem('creds_api_key');
+            var decryptKey = localStorage.getItem('creds_decrypt_key');
+
+            if (apiKey && decryptKey) {
+                this.page = 'unlock';
+            } else {
+                this.page = 'login';
+            }
         },
         methods: {
+            lock: function(pin) {
+                var apiKey = this.api.getApiKey();
+                var decryptKey = this.encryptor.getPassword();
+
+                this.encryptor.setPassword(pin);
+                apiKey = this.encryptor.encrypt(apiKey);
+                decryptKey = this.encryptor.encrypt(decryptKey);
+
+                localStorage.setItem('creds_api_key', apiKey);
+                localStorage.setItem('creds_decrypt_key', decryptKey);
+                this.removeEncryptionData();
+                this.page = 'unlock';
+            },
+            unlock: function(pin) {
+                this.encryptor.setPassword(pin);
+                var apiKey = localStorage.getItem('creds_api_key');
+                var decryptKey = localStorage.getItem('creds_decrypt_key');
+
+                try {
+                    apiKey = this.encryptor.decrypt(apiKey);
+                    decryptKey = this.encryptor.decrypt(decryptKey);
+
+                    this.api.setApiKey(apiKey);
+                    this.encryptor.setPassword(decryptKey);
+
+                    localStorage.removeItem('creds_api_key');
+                    localStorage.removeItem('creds_decrypt_key');
+                    this.getCreds();
+                }
+                catch (e) {
+                    this.forgetUnlock();
+                    this.loginMessage = 'Incorrect Pin. Logged out.';
+                }
+            },
+            forgetUnlock: function() {
+                localStorage.removeItem('creds_api_key');
+                localStorage.removeItem('creds_decrypt_key');
+                this.logout();
+            },
             gotoCreds: function() {
                 this.page = 'creds';
             },
-            logout: function() {
-                this.encryptor.forgetPassword();
+            removeEncryptionData: function() {
+                this.encryptor.removePassword();
+                this.api.removeApiKey();
                 this.loginMessage = '';
                 this.credsEnc = [];
+            },
+            logout: function() {
+                this.removeEncryptionData();
                 this.page = 'login';
             },
             register: function() {
@@ -36,11 +87,9 @@
                 this.api.getCreds(function(creds) {
                     self.credsEnc = creds;
                     self.gotoCreds();
-                }, function() {
-                    // Go to error page here
-                    // Logout (remove api key from api and password from encryptor)
-                    // Go to login
-                    console.log('Could not get creds…');
+                }, function(error) {
+                    self.logout();
+                    self.loginMessage = 'Could not get creds – Server error ' + error.status;
                 });
             }
         }

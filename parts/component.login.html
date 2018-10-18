@@ -7,7 +7,7 @@
                 {{ loginMessage }}
             </div>
 
-            <div v-if="errorMessage" style="background-color: red;">
+            <div v-if="errorMessage" style="background-color: #eaa;">
                 {{ errorMessage }}
             </div>
 
@@ -52,7 +52,7 @@
 
             setTimeout(function() {
                 // self.$refs.loginSubmitButton.click();
-            }, 1000);
+            }, 500);
         },
         methods: {
             login: function() {
@@ -67,6 +67,7 @@
             register: function() {
                 this.$emit('register');
             },
+            // duplicate
             typingShowHide: function(event) {
                 var self = this;
 

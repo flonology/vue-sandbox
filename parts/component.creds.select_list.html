@@ -1,6 +1,8 @@
 <script type="text/x-template" id="creds-select-list-tpl">
     <div id="selectlistcontainer">
         <div class="search__container">
+            <button class="button" v-on:click="addNewEntry">add</button>
+
             <input class="search__input input--standard"
                 placeholder="Search…"
                 v-model="searchString"
@@ -10,7 +12,7 @@
                 v-on:keyup.enter="showListEntry(list.getCurrent())"
                 tabindex="1" />
 
-            <button class="button" v-on:click="addNewEntry">add</button>
+            <button class="button" v-on:click="lock">lock</button>
         </div>
 
         <div class="search__entryIndicator">
@@ -18,7 +20,7 @@
             <span
                 v-on:click="showAll"
                 class="search__showAll"
-                v-bind:class="{ 'search__showAll--hidden': hideShowAll }">SHOW ALL</span>
+                v-bind:class="{ 'search__showAll--hidden': hideShowAll }">► show all</span>
         </div>
 
         <ul class="list">
@@ -92,6 +94,9 @@ Vue.component('creds-select-list', {
             }, 50);
 
             return "Hallo";
+        },
+        lock: function() {
+            this.$emit('lock');
         },
         addNewEntry: function() {
             this.saveScrollPosition();

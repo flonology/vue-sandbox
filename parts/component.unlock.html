@@ -1,0 +1,80 @@
+<script type="text/x-template" id="unlock-tpl">
+    <form autocomplete="off" v-on:submit.prevent="unlock">
+        <fieldset>
+            <legend>Enter pin to unlock</legend>
+
+            {{ message }}
+
+            <label class="form__label">Pin (min. 6 digits)
+                <input
+                    class="form__input"
+                    type="password"
+                    autofocus="autofocus"
+                    v-model="pin"
+                    v-on:input="typingShowHide"
+                />
+            </label>
+
+            <button
+                class="button"
+                type="button"
+                v-on:click="unlock"
+                v-bind:disabled="unlockDisabled">unlock</button>
+
+            <button
+                class="button"
+                type="button"
+                v-on:click="forgotPin">forgot pin</button>
+        </fieldset>
+    </form>
+</script>
+
+
+<script>
+    Vue.component('unlock', {
+        template: '#unlock-tpl',
+        props: [],
+        mounted: function() {
+        },
+        computed: {
+            unlockDisabled: function() {
+                return this.pin.length < 6;
+            }
+        },
+        data: function() {
+            return {
+                pin: '',
+                message: ''
+            };
+        },
+        methods: {
+            unlock: function(event) {
+                if (this.unlockDisabled) {
+                    return;
+                }
+
+                this.$emit('unlock', this.pin);
+            },
+            forgotPin: function() {
+                this.$emit('forgot-pin');
+            },
+            // duplicate
+            typingShowHide: function(event) {
+                var self = this;
+
+                if (self.typingTimeout) {
+                    clearTimeout(self.typingTimeout);
+                }
+
+                if (event.target.type !== 'text') {
+                    event.target.type = 'text';
+                }
+
+                self.typingTimeout = setTimeout(function() {
+                    event.target.type = 'password';
+                    self.typingTimeout = 0;
+                }, 750);
+            }
+        }
+    });
+</script>

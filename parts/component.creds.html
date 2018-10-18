@@ -4,6 +4,7 @@
             ref="selectList"
             v-on:show-list-entry="showListEntry"
             v-on:add-entry="addEntry"
+            v-on:lock="gotoLock"
             v-bind:creds="decryptedCreds"
             v-bind:highlight-entry="highlightEntry"></creds-select-list>
 
@@ -27,6 +28,10 @@
             v-bind:processing-entry="processingEntry"
             v-on:update-entry="updateEntry"
             v-on:back-to-list="gotoList"></creds-edit-entry>
+
+        <creds-lock v-if="page === 'lock'"
+            v-on:lock="lock"
+            v-on:back-to-list="gotoList"></creds-lock>
     </div>
 </script>
 
@@ -49,6 +54,12 @@ Vue.component('creds', {
     updated: function() {
     },
     methods: {
+        lock: function(pin) {
+            this.$emit('lock', pin);
+        },
+        gotoLock: function() {
+            this.page = 'lock';
+        },
         credsDecrypted: function(decryptedCreds) {
             this.decryptedCreds = decryptedCreds;
             this.gotoList();
