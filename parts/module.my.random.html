@@ -1,44 +1,41 @@
 <script>
     My.Random = function() {
         var self = {
-            charRanges: [
-                { from: 48, to: 57 },   // 0..9
-                { from: 65, to: 90 },   // A..Z
-                { from: 97, to: 122 }   // a..z
-            ]
+            rangeTypes: ['special', 'lower', 'upper', 'number'],
+            charMap: {
+                special: ['!','$','%','&','(',')','{','}','[',']','.','-','_'],
+                lower: ['a','b','c','d','e','f','g','h','k','l','m','n','p','q','r','s','t','u','v','w','x','y','z'],
+                upper: ['A','B','C','D','E','F','G','H','K','L','M','N','P','Q','R','S','T','U','V','W','X','Y','Z'],
+                number: ['1','2','3','4','5','6','7','8','9']
+            }
         };
-
-
-        var multiRoundRandom = function() {
-            var rounds = parseInt(
-                    Date.now().toString().substr(-2)
-                ) + 1;
-
-            var random = Math.random();
-
-            for (var i = 0; i < rounds; i += 1) {
-                random += Math.random();
-                random /= 2;
-            };
-
-            return random;
-        }
 
 
         var randomIntBetween = function(min, max) {
             return Math.floor(
-                multiRoundRandom() * (max - min + 1)
+                Math.random() * (max - min + 1)
             ) + min
         };
 
 
+        var randomCharOfType = function(type) {
+            if (self.charMap[type] === undefined) {
+                return '';
+            }
+
+            var charRange = self.charMap[type];
+            var charIndex = randomIntBetween(0, charRange.length - 1);
+
+            return charRange[charIndex];
+        }
+
+
         var randomChar = function() {
-            var charRange = self.charRanges[
-                randomIntBetween(0, 2)
+            var rangeType = self.rangeTypes[
+                randomIntBetween(0, self.rangeTypes.length - 1)
             ];
 
-            var charCode = randomIntBetween(charRange.from, charRange.to);
-            return String.fromCharCode(charCode);
+            return randomCharOfType(rangeType);
         };
 
 
@@ -54,6 +51,8 @@
 
 
         return {
+            randomCharOfType: randomCharOfType,
+            randomChar: randomChar,
             password: password
         };
     };
