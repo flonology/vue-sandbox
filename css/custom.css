@@ -21,11 +21,9 @@ fieldset {
 }
 
 .button__generate {
-    padding: 0.1em;
     margin-left: 1em;
     font-variant: small-caps;
     font-weight: bold;
-    border: 1px solid #aaa;
 }
 
 .search__input {
@@ -71,8 +69,10 @@ fieldset {
 }
 
 .form__input {
+    padding: 0.5em;
     margin-top: 0.5em;
     display: block;
+    width: 95%;
 }
 
 .form__textarea {

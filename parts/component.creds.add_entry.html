@@ -1,7 +1,8 @@
 <script type="text/x-template" id="creds-add-entry-tpl">
     <form
         autocomplete="off"
-        v-on:change="validate">
+        v-on:change="validate"
+        v-on:submit.prevent="nothing">
 
         <fieldset>
             <legend>Add entry</legend>
@@ -35,24 +36,22 @@
             </label>
 
             <label class="form__label">Password <span>{{ error.password }}</span>
-                <a
+                <span
                     class="button__generate"
-                    v-on:click="generatePassword">Generate</a>
+                    v-on:click="generatePassword">► generate</span>
                 <input
                     class="form__input"
-                    type="password"
+                    v-bind:type="passwordInputType"
                     name="password"
                     v-model="create.password"
+                    v-on:input="typingShowHide"
                 />
-            </label>
 
-            <label class="form__label">Repeat password
-                <input
-                    class="form__input"
-                    type="password"
-                    name="password_repeat"
-                    v-model="create.passwordRepeat"
-                />
+                <creds-gen-password
+                    v-if="showGeneratePassword"
+                    v-on:password-generated="passwordGenerated"
+                    v-on:close="closePasswordGenerator">
+                </creds-gen-password>
             </label>
 
             <label class="form__label">Notes
@@ -83,18 +82,23 @@
         },
         data: function() {
             return {
+                passwordInputType: 'password',
+                showGeneratePassword: false,
                 create: {
                     title: 'Some Example Title',
                     url: 'http://www.example.com',
                     username: 'ExampleUser',
                     password: 'ExamplePass',
-                    passwordRepeat: 'ExamplePassRepeat',
                     notes: 'Hi, this is an example note'
                 },
-                error: {}
+                error: {},
+                typingTimeout: 0
             };
         },
         methods: {
+            nothing: function() {
+                return;
+            },
             createEntry: function(event) {
                 this.$emit('create-entry', {
                     title: this.create.title,
@@ -114,18 +118,45 @@
                 if (this.create.password == '') {
                     this.error.password = 'is required.';
                 }
-
-                if (this.create.password != this.create.passwordRepeat) {
-                    this.error.password = 'does not match.';
-                }
             },
             backToList: function() {
                 this.$emit('back-to-list');
             },
             generatePassword: function(event) {
-                this.create.password = My.Random().password(32);
-                this.create.passwordRepeat = this.create.password;
+                this.showGeneratePassword = true;
+            },
+            passwordGenerated: function(password) {
+                this.create.password = password;
+                this.closePasswordGenerator();
+                this.flashPassword();
                 this.validate();
+            },
+            closePasswordGenerator: function() {
+                this.showGeneratePassword = false;
+            },
+            flashPassword: function() {
+                var self = this;
+
+                self.passwordInputType = 'text';
+                setTimeout(function() {
+                    self.passwordInputType = 'password';
+                }, 1000);
+            },
+            typingShowHide: function(event) {
+                var self = this;
+
+                if (self.typingTimeout) {
+                    clearTimeout(self.typingTimeout);
+                }
+
+                if (event.target.type !== 'text') {
+                    event.target.type = 'text';
+                }
+
+                self.typingTimeout = setTimeout(function() {
+                    event.target.type = 'password';
+                    self.typingTimeout = 0;
+                }, 750);
             }
         }
     });

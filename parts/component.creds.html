@@ -1,8 +1,5 @@
 <script type="text/x-template" id="creds-tpl">
     <div id="credscontainer">
-        <creds-gen-password v-show="page === 'genPassword'">
-        </creds-gen-password>
-
         <creds-select-list v-show="page === 'list'"
             ref="selectList"
             v-on:show-list-entry="showListEntry"
@@ -45,7 +42,7 @@ Vue.component('creds', {
     props: ['api', 'encryptor', 'encryptedCreds'],
     data: function() {
         return {
-            page: 'genPassword',
+            page: 'decrypt',
             decryptedCreds: [],
             highlightEntry: 0,
             processingEntry: false,
