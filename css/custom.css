@@ -9,6 +9,19 @@ fieldset {
     margin: 0;
 }
 
+.backup__message {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.backup__link {
+    font-weight: bold;
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    margin-bottom: 1em;
+}
+
 .logout {
     margin-top: 1em;
     text-align: center;

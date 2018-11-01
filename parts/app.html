@@ -19,6 +19,6 @@
     v-bind:encryptor="encryptor"
     v-bind:encrypted-creds="credsEnc"></creds>
 
-<div v-if="page !== 'login' && page !== 'register'" class="logout">
-    <button class="button" v-on:click="logout()">logout</button>
+<div v-if="page === 'creds'" class="logout">
+    <button class="button" v-on:click="logout" class="logout">logout</button>
 </div>

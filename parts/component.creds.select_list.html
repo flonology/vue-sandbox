@@ -1,5 +1,5 @@
 <script type="text/x-template" id="creds-select-list-tpl">
-    <div id="selectlistcontainer">
+    <div> <!-- select list container -->
         <div class="search__container">
             <button class="button" v-on:click="addNewEntry">add</button>
 
@@ -12,7 +12,8 @@
                 v-on:keyup.enter="showListEntry(list.getCurrent())"
                 tabindex="1" />
 
-            <button class="button" v-on:click="lock">lock</button>
+            <button class="button" type="button" v-on:click="lock">lock</button>
+            <button class="button" type="button" v-on:click="gotoBackup">backup</button>
         </div>
 
         <div class="search__entryIndicator">
@@ -46,7 +47,7 @@ Vue.component('creds-select-list', {
     props: ['creds', 'highlightEntry'],
     data: function() {
         return {
-            showMaxListEntries: 25,
+            showMaxListEntries: 10,
             searchString: '',
             numSearchResults: 0,
             scrollPosition: null
@@ -80,8 +81,6 @@ Vue.component('creds-select-list', {
     updated: function() {
     },
     methods: {
-        // Hm, can I call a method via component ref and get its return value?
-        // e. g. getSelectedListEntry? That‘d be nice.
         scrollToSavedPosition: function() {
             var self = this;
 
@@ -92,11 +91,12 @@ Vue.component('creds-select-list', {
             setTimeout(function() {
                 window.scrollTo({ top: self.scrollPosition, behavior: 'smooth' });
             }, 50);
-
-            return "Hallo";
         },
         lock: function() {
             this.$emit('lock');
+        },
+        gotoBackup: function() {
+            this.$emit('goto-backup');
         },
         addNewEntry: function() {
             this.saveScrollPosition();

@@ -12,6 +12,31 @@
         };
 
 
+        var getBackupUrl = function(successCall, errorCall) {
+            var url
+                = My.Config.api.baseUrl
+                + My.Config.api.routes.backup.download;
+
+            getOneTimeToken(function(token) {
+                successCall(url + '/' + token);
+            }, errorCall);
+        };
+
+
+        var getOneTimeToken = function(successCall, errorCall) {
+            var url = My.Config.api.baseUrl + My.Config.api.routes.token;
+
+            axios
+                .post(url, {}, self.config())
+                .then(function (response) {
+                    successCall(response.data);
+                })
+                .catch(function (error) {
+                    errorCall(error.response);
+                });
+        };
+
+
         var login = function(username, password, successCall, errorCall) {
             var url = My.Config.api.baseUrl + My.Config.api.routes.login;
 
@@ -106,6 +131,7 @@
 
 
         return {
+            getBackupUrl: getBackupUrl,
             login: login,
             register: register,
             getCreds: getCreds,

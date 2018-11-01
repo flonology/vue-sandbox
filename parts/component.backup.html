@@ -1,0 +1,61 @@
+<script type="text/x-template" id="backup-tpl">
+    <form autocomplete="off" v-on:submit.prevent="nothing">
+        <fieldset>
+            <legend>Backup</legend>
+
+            <div class="backup__message">{{ message }}</div>
+
+            <a
+                class="backup__link"
+                v-if="backupUrl"
+                v-bind:href="backupUrl"
+                v-on:click="resetBackupUrl">► download</a>
+
+            <button
+                class="button"
+                type="button"
+                v-on:click="gotoCreds">back</button>
+        </fieldset>
+    </form>
+</script>
+
+
+<script>
+    Vue.component('backup', {
+        template: '#backup-tpl',
+        props: ['api'],
+        mounted: function() {
+            this.fetchBackupUrl();
+        },
+        computed: {
+        },
+        data: function() {
+            return {
+                backupUrl: '',
+                message: ''
+            };
+        },
+        methods: {
+            resetBackupUrl: function() {
+                this.backupUrl = '';
+            },
+            fetchBackupUrl: function() {
+                var self = this;
+                self.message = 'Preparing…';
+
+                self.api.getBackupUrl(function(url) {
+                    self.backupUrl = url;
+                    self.message = 'Ready';
+                }, function(error) {
+                    self.message = 'Error: ' + error.statusText;
+                });
+            },
+            nothing: function() {
+                return;
+            },
+            gotoCreds: function() {
+                this.$emit('goto-creds');
+            }
+        }
+    });
+</script>

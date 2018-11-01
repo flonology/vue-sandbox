@@ -1,10 +1,11 @@
 <script type="text/x-template" id="creds-tpl">
-    <div id="credscontainer">
+    <div> <!-- creds container -->
         <creds-select-list v-show="page === 'list'"
             ref="selectList"
             v-on:show-list-entry="showListEntry"
             v-on:add-entry="addEntry"
             v-on:lock="gotoLock"
+            v-on:goto-backup="gotoBackup"
             v-bind:creds="decryptedCreds"
             v-bind:highlight-entry="highlightEntry"></creds-select-list>
 
@@ -32,6 +33,10 @@
         <creds-lock v-if="page === 'lock'"
             v-on:lock="lock"
             v-on:back-to-list="gotoList"></creds-lock>
+
+        <backup v-if="page === 'backup'"
+            v-bind:api="api"
+            v-on:goto-creds="gotoList"></backup>
     </div>
 </script>
 
@@ -56,6 +61,9 @@ Vue.component('creds', {
     methods: {
         lock: function(pin) {
             this.$emit('lock', pin);
+        },
+        gotoBackup: function() {
+            this.page = 'backup';
         },
         gotoLock: function() {
             this.page = 'lock';
@@ -95,6 +103,7 @@ Vue.component('creds', {
             }
 
             var errorCall = function() {
+                /* todo: do something useful */
                 console.log('Oh nooooo....');
                 self.processingEntry = false;
             }
