@@ -3,7 +3,7 @@
         <fieldset>
             <legend>Backup</legend>
 
-            <div class="backup__message">{{ message }}</div>
+            <div class="backup__message">{{ backupMessage }}</div>
 
             <a
                 class="backup__link"
@@ -15,6 +15,19 @@
                 class="button"
                 type="button"
                 v-on:click="gotoCreds">back</button>
+        </fieldset>
+
+        <fieldset style="margin-top: 1.5em;">
+            <legend>Restore</legend>
+
+            <div class="backup__message">{{ restoreMessage }}</div>
+            <input type="file" v-on:change="fileSelected" ref="fileToUpload"/>
+
+            <button
+                v-show="this.fileToUpload"
+                class="button"
+                type="button"
+                v-on:click="restoreBackup">restore</button>
         </fieldset>
     </form>
 </script>
@@ -32,22 +45,49 @@
         data: function() {
             return {
                 backupUrl: '',
-                message: ''
+                backupMessage: '',
+                restoreMessage: 'Choose file to restore from',
+                fileToUpload: null
             };
         },
         methods: {
+            fileSelected: function() {
+                this.fileToUpload = this.$refs.fileToUpload.files[0];
+                this.restoreMessage = 'Ready to restore…';
+            },
+            restoreBackup: function() {
+                if (this.fileToUpload == null) {
+                    return;
+                }
+
+                var self = this;
+                var formData = new FormData();
+                formData.append('backup_file', this.fileToUpload);
+
+                self.restoreMessage = 'Uploading…';
+                this.api.restoreBackup(formData, function(success) {
+                    self.restoreMessage
+                        = 'Nice. Restored ' + success.restored + ', '
+                        + 'updated ' + success.updated + ', and left '
+                        + success.untouched + ' untouched.';
+
+                    /* todo: hide restore button, reload creds, goto list */
+                }, function(error) {
+                    self.restoreMessage = 'Error: ' + error.statusText;
+                });
+            },
             resetBackupUrl: function() {
                 this.backupUrl = '';
             },
             fetchBackupUrl: function() {
                 var self = this;
-                self.message = 'Preparing…';
+                self.backupMessage = 'Preparing…';
 
                 self.api.getBackupUrl(function(url) {
                     self.backupUrl = url;
-                    self.message = 'Ready';
+                    self.backupMessage = 'Ready';
                 }, function(error) {
-                    self.message = 'Error: ' + error.statusText;
+                    self.backupMessage = 'Error: ' + error.statusText;
                 });
             },
             nothing: function() {

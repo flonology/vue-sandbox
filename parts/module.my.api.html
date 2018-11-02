@@ -12,6 +12,23 @@
         };
 
 
+        var restoreBackup = function(formData, successCall, errorCall) {
+            var url
+                = My.Config.api.baseUrl
+                + My.Config.api.routes.backup.restore;
+
+            axios
+                .post(url, formData, self.config())
+                .then(function (response) {
+                    successCall(response.data.data);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    errorCall(error.response);
+                });
+        };
+
+
         var getBackupUrl = function(successCall, errorCall) {
             var url
                 = My.Config.api.baseUrl
@@ -121,9 +138,11 @@
             return self.apiKey;
         };
 
+
         var setApiKey = function(apiKey) {
             return self.apiKey = apiKey;
         };
+
 
         var removeApiKey = function() {
             self.apiKey = null;
@@ -131,6 +150,7 @@
 
 
         return {
+            restoreBackup: restoreBackup,
             getBackupUrl: getBackupUrl,
             login: login,
             register: register,
