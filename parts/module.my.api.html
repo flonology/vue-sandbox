@@ -134,6 +134,25 @@
         };
 
 
+        var deleteCred = function(id, successCall, errorCall) {
+            var url
+                = My.Config.api.baseUrl
+                + My.Config.api.routes.creds + '/'
+                + id;
+
+            axios
+                .delete(
+                    url, self.config()
+                )
+                .then(function (response) {
+                    successCall(response.data.data.id);
+                })
+                .catch(function (error) {
+                    errorCall(error.response);
+                });
+        };
+
+
         var getApiKey = function() {
             return self.apiKey;
         };
@@ -157,6 +176,7 @@
             getCreds: getCreds,
             createCred: createCred,
             updateCred: updateCred,
+            deleteCred: deleteCred,
             getApiKey: getApiKey,
             setApiKey: setApiKey,
             removeApiKey: removeApiKey

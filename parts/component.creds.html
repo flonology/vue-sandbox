@@ -16,6 +16,7 @@
 
         <creds-list-entry v-if="page === 'showEntry'"
               v-on:back-to-list="gotoList"
+              v-on:delete-entry="deleteEntry"
               v-bind:entry="selectedListEntry"
               v-on:edit-entry="editEntry"></creds-list-entry>
 
@@ -47,7 +48,7 @@ Vue.component('creds', {
     props: ['api', 'encryptor', 'encryptedCreds'],
     data: function() {
         return {
-            page: 'backup',
+            page: 'decrypt',
             decryptedCreds: [],
             highlightEntry: 0,
             processingEntry: false,
@@ -81,6 +82,37 @@ Vue.component('creds', {
         },
         editEntry: function() {
             this.page = 'edit';
+        },
+        findListEntryIndex: function(entryId) {
+            var index = null;
+
+            for (var i = 0; i < this.decryptedCreds.length; i += 1) {
+                if (this.decryptedCreds[i].id == entryId) {
+                    index = i;
+                }
+            }
+
+            return index;
+        },
+        deleteEntry: function(entry) {
+            var self = this;
+            var startIndex = this.findListEntryIndex(entry.id);
+
+            this.gotoList();
+            this.highlightEntry = entry.id;
+
+            setTimeout(function() {
+                self.api.deleteCred(entry.id, function(success) {
+                    self.decryptedCreds.splice(
+                        startIndex,
+                        1 /* delete count */
+                    );
+
+                    self.highlightEntry = 0;
+                }, function(error) {
+                    console.log(error);
+                });
+            }, 1000);
         },
         flashListEntry: function(entryId) {
             var self = this;

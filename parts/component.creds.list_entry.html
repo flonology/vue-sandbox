@@ -41,8 +41,17 @@
             <pre class="entryDetail__notesPreformatted">{{ entry.notes }}</pre>
         </p>
 
-        <button class="button" v-on:click="backToList">back</button>
+        <button class="button" v-on:click="backToList">◀︎ back</button>
         <button class="button" v-on:click="editEntry">edit</button>
+
+        <button
+            v-if="deleteInterval == 0"
+            class="button"
+            v-on:click="deleteEntry">delete</button>
+        <button
+            v-if="deleteInterval"
+            class="button"
+            v-on:click="cancelDelete">cancel delete | {{ secondsRemaining }}</button>
     </div>
 </script>
 
@@ -53,10 +62,35 @@
         mounted: function() {
         },
         data: function() {
-            return {};
+            return {
+                secondsRemaining: 0,
+                deleteInterval: 0
+            };
         },
         props: ['entry'],
         methods: {
+            deleteEntry: function() {
+                var self = this;
+
+                this.resetDeleteTimer();
+                this.deleteInterval = setInterval(function() {
+                    self.secondsRemaining -= 1;
+                    if (self.secondsRemaining > 0) {
+                        return;
+                    }
+
+                    self.cancelDelete();
+                    self.$emit('delete-entry', self.entry);
+                }, 100);
+            },
+            cancelDelete: function() {
+                clearInterval(this.deleteInterval);
+                this.resetDeleteTimer();
+            },
+            resetDeleteTimer: function() {
+                this.deleteInterval = 0;
+                this.secondsRemaining = 5;
+            },
             copyToClipboard: function(event, inputField) {
                 var originalInputType = inputField.type;
 
