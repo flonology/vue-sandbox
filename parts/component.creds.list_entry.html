@@ -81,7 +81,7 @@
 
                     self.cancelDelete();
                     self.$emit('delete-entry', self.entry);
-                }, 100);
+                }, 1000);
             },
             cancelDelete: function() {
                 clearInterval(this.deleteInterval);
