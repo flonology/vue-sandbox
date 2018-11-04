@@ -14,7 +14,7 @@
             <button
                 class="button"
                 type="button"
-                v-on:click="gotoCreds">back</button>
+                v-on:click="gotoCreds">◀︎ back</button>
         </fieldset>
 
         <fieldset style="margin-top: 1.5em;">
@@ -28,6 +28,29 @@
                 class="button"
                 type="button"
                 v-on:click="restoreBackup">restore</button>
+
+            <button
+                class="button"
+                type="button"
+                v-on:click="gotoCreds">◀︎ back</button>
+        </fieldset>
+
+        <fieldset style="margin-top: 1.5em;">
+            <legend>Delete account</legend>
+
+            This deletes all your stored data.
+            If you have a backup, you can re-register later and
+            restore your creds from that file.
+
+            <button
+                class="button"
+                type="button"
+                v-on:click="gotoCreds">◀︎ back</button>
+
+            <button
+                class="button"
+                type="button"
+                v-on:click="deleteAccount">delete account</button>
         </fieldset>
     </form>
 </script>
@@ -51,6 +74,9 @@
             };
         },
         methods: {
+            deleteAccount: function() {
+                console.log('Delete account... (use timer thing?)');
+            },
             fileSelected: function() {
                 this.fileToUpload = this.$refs.fileToUpload.files[0];
                 this.restoreMessage = 'Ready to restore…';

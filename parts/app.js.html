@@ -6,7 +6,8 @@
             api: My.Api(),
             encryptor: My.Encryptor(),
             credsEnc: [],
-            loginMessage: ''
+            loginMessage: '',
+            unlockMessage: ''
         },
         mounted: function () {
             var apiKey = localStorage.getItem('creds_api_key');
@@ -49,8 +50,7 @@
                     this.getCreds();
                 }
                 catch (e) {
-                    this.forgetUnlock();
-                    this.loginMessage = 'Incorrect Pin. Logged out.';
+                    this.unlockMessage = 'Incorrect Pin.';
                 }
             },
             forgetUnlock: function() {

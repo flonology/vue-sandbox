@@ -13,7 +13,11 @@
                     v-on:input="typingShowHide" />
             </label>
 
-            <button class="button" type="button" v-on:click="decrypt" ref="decryptButton">decrypt</button>
+            <button v-show="showPasswordInput"
+                class="button"
+                type="button"
+                v-on:click="decrypt"
+                ref="decryptButton">decrypt</button>
         </fieldset>
     </form>
 </script>
@@ -26,7 +30,8 @@
         data: function() {
             return {
                 password: 'Johns Encryption Phrase',
-                message: 'Placeholder Message'
+                message: '',
+                showPasswordInput: false
             };
         },
         mounted: function() {
@@ -35,9 +40,14 @@
             this.$refs.decryptButton.focus();
 
             if (this.encryptor.hasPassword()) {
-                this.password = this.encryptor.getPassword();
-                this.decrypt();
+                self.message = 'Password via unlock…';
+                self.password = self.encryptor.getPassword();
+
+                setTimeout(function() {
+                    self.decrypt();
+                }, 1750);
             } else {
+                self.showPasswordInput = true;
                 self.message = 'Clicking in half a sec...';
 
                 setTimeout(function() {
@@ -62,7 +72,7 @@
                     };
                 }, 500);
             },
-            // Duplicate in login component
+            // Duplicate
             typingShowHide: function(event) {
                 var self = this;
 

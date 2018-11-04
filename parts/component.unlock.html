@@ -33,9 +33,9 @@
 <script>
     Vue.component('unlock', {
         template: '#unlock-tpl',
-        props: [],
-        mounted: function() {
-        },
+        props: [
+            'message'
+        ],
         computed: {
             unlockDisabled: function() {
                 return this.pin.length < 6;
@@ -43,8 +43,7 @@
         },
         data: function() {
             return {
-                pin: '',
-                message: ''
+                pin: ''
             };
         },
         methods: {
