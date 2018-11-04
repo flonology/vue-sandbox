@@ -24,7 +24,7 @@
             <input type="file" v-on:change="fileSelected" ref="fileToUpload"/>
 
             <button
-                v-show="this.fileToUpload"
+                v-show="showRestoreButton"
                 class="button"
                 type="button"
                 v-on:click="restoreBackup">restore</button>
@@ -38,9 +38,11 @@
         <fieldset style="margin-top: 1.5em;">
             <legend>Delete account</legend>
 
-            This deletes all your stored data.
-            If you have a backup, you can re-register later and
-            restore your creds from that file.
+            <div>
+                This deletes all your stored data.
+                If you have a backup, you can re-register later and
+                restore your creds from that file.
+            </div>
 
             <button
                 class="button"
@@ -64,13 +66,17 @@
             this.fetchBackupUrl();
         },
         computed: {
+            showRestoreButton: function() {
+                return this.fileToUpload && !this.restoreInProgress
+            }
         },
         data: function() {
             return {
                 backupUrl: '',
                 backupMessage: '',
                 restoreMessage: 'Choose file to restore from',
-                fileToUpload: null
+                fileToUpload: null,
+                restoreInProgress: false
             };
         },
         methods: {
@@ -91,13 +97,15 @@
                 formData.append('backup_file', this.fileToUpload);
 
                 self.restoreMessage = 'Uploading…';
+                self.restoreInProgress = true;
+
                 this.api.restoreBackup(formData, function(success) {
                     self.restoreMessage
                         = 'Nice. Restored ' + success.restored + ', '
                         + 'updated ' + success.updated + ', and left '
                         + success.untouched + ' untouched.';
 
-                    /* todo: hide restore button, reload creds, goto list */
+                    self.$emit('backup-restored');
                 }, function(error) {
                     self.restoreMessage = 'Error: ' + error.statusText;
                 });

@@ -37,7 +37,8 @@
 
         <backup v-if="page === 'backup'"
             v-bind:api="api"
-            v-on:goto-creds="gotoList"></backup>
+            v-on:goto-creds="gotoList"
+            v-on:backup-restored="reloadCreds"></backup>
     </div>
 </script>
 
@@ -60,6 +61,9 @@ Vue.component('creds', {
     updated: function() {
     },
     methods: {
+        reloadCreds: function() {
+            this.$emit('reload-creds');
+        },
         lock: function(pin) {
             this.$emit('lock', pin);
         },

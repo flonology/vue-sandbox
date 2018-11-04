@@ -16,6 +16,7 @@
 
 <creds v-if="page === 'creds'"
     v-on:lock="lock"
+    v-on:reload-creds="reloadCreds"
     v-bind:api="api"
     v-bind:encryptor="encryptor"
     v-bind:encrypted-creds="credsEnc"></creds>
