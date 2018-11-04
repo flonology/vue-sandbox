@@ -16,10 +16,12 @@
 
 <creds v-if="page === 'creds'"
     v-on:lock="lock"
-    v-on:reload-creds="reloadCreds"
+    v-on:reload-creds="getCreds"
     v-bind:api="api"
     v-bind:encryptor="encryptor"
     v-bind:encrypted-creds="credsEnc"></creds>
+
+<loading v-if="page === 'loading'"></loading>
 
 <div v-if="page === 'creds'" class="logout">
     <button class="button" v-on:click="logout">logout</button>
