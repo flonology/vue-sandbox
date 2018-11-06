@@ -12,8 +12,11 @@
                 v-on:keyup.enter="showListEntry(list.getCurrent())"
                 tabindex="1" />
 
+            <button class="button" type="button" v-on:click="openMenu">menu</button>
+            <!--
             <button class="button" type="button" v-on:click="lock">lock</button>
             <button class="button" type="button" v-on:click="gotoBackup">backup</button>
+            -->
         </div>
 
         <div class="search__entryIndicator">
@@ -81,6 +84,9 @@ Vue.component('creds-select-list', {
     updated: function() {
     },
     methods: {
+        openMenu: function() {
+            this.$emit('open-menu');
+        },
         scrollToSavedPosition: function() {
             var self = this;
 

@@ -2,6 +2,7 @@
     <div> <!-- creds container -->
         <creds-select-list v-show="page === 'list'"
             ref="selectList"
+            v-on:open-menu="openMenu"
             v-on:show-list-entry="showListEntry"
             v-on:add-entry="addEntry"
             v-on:lock="gotoLock"
@@ -30,6 +31,9 @@
             v-bind:processing-entry="processingEntry"
             v-on:update-entry="updateEntry"
             v-on:back-to-list="gotoList"></creds-edit-entry>
+
+        <creds-menu v-if="page === 'menu'"
+            v-on:go-back="gotoList"></creds-menu>
 
         <creds-lock v-if="page === 'lock'"
             v-on:lock="lock"
@@ -61,6 +65,9 @@ Vue.component('creds', {
     updated: function() {
     },
     methods: {
+        openMenu: function() {
+            this.page = 'menu';
+        },
         reloadCreds: function() {
             this.$emit('reload-creds');
         },

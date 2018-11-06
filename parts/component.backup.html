@@ -105,7 +105,10 @@
                         + 'updated ' + success.updated + ', and left '
                         + success.untouched + ' untouched.';
 
-                    self.$emit('backup-restored');
+                    /* todo: remove back button, show reload/apply button */
+                    setTimeout(function() {
+                        self.$emit('backup-restored');
+                    }, 1000);
                 }, function(error) {
                     self.restoreMessage = 'Error: ' + error.statusText;
                 });
