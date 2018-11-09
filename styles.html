@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creds UI">
+    <title>Creds UI</title>
+
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="css/custom.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Menu -->
+        <div>
+            <fieldset>
+                <legend>Menu</legend>
+                <button
+                    type="button"
+                    class="button menu__back">
+                        <span class="menu__entry-icon">◀︎</span>
+                        back
+                </button>
+
+                <button
+                    type="button"
+                    class="button menu__entry">
+                        <span class="menu__entry-icon">➕</span>
+                        add
+                </button>
+
+                <button
+                    type="button"
+                    class="button menu__entry">
+                        <span class="menu__entry-icon">🔐</span>
+                        lock
+                </button>
+
+                <button
+                    type="button"
+                    class="button menu__entry">
+                        <span class="menu__entry-icon">💾</span>
+                        backup
+                </button>
+
+                <button
+                    type="button"
+                    class="button menu__entry">
+                        <span class="menu__entry-icon">🌟</span>
+                        restore
+                </button>
+
+                <button
+                    type="button"
+                    class="button menu__entry">
+                        <span class="menu__entry-icon">✖</span>
+                        delete account
+                </button>
+            </fieldset>
+        </div>
+
+
+        <!-- Entry detail -->
+        <div class="entryDetail" style="margin-top: 3em;">
+            <p class="entryDetail__title">
+                Mega Shop Cologne
+            </p>
+
+            <p class="entryDetail__url">
+                <a target="_blank" href="https://www.example.com/">https://www.example.com/</a>
+            </p>
+
+            <p class="entryDetail__username">
+                <input
+                    class="entryDetail__usernameInput"
+                    readonly="readonly" value="foo the user"/>
+
+                <button class="button">📋 copy</button>
+            </p>
+
+            <p class="entryDetail__password">
+                <input
+                    class="entryDetail__passwordInput"
+                    type="password"
+                    readonly="readonly" value="some password you cannot see"/>
+
+                <button class="button">📋 copy</button>
+            </p>
+
+            <p class="entryDetail__notes">
+                <pre class="entryDetail__notesPreformatted">
+                    Here you can see some notes.
+                    Each line break is a line break you can see!
+                </pre>
+            </p>
+
+            <button class="button entryDetail__button--back">◀︎ back</button>
+            <button class="button entryDetail__button--edit">🖋 edit</button>
+
+            <button class="button entryDetail__button entryDetail__button--delete">✖ delete</button>
+            <button class="button entryDetail__button entryDetail__button--delete">🛇 cancel delete | 5</button>
+        </div>
+    </div>
+</body>
+</html>
