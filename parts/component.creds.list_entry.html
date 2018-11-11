@@ -18,7 +18,7 @@
             <button
                 class="button"
                 v-on:click="copyToClipboard($event, $refs.entryDetailUsername)">
-                Copy to Clipboard
+                📋 copy
             </button>
         </p>
 
@@ -33,7 +33,7 @@
             <button
                 class="button"
                 v-on:click="copyToClipboard($event, $refs.entryDetailPassword)">
-                Copy to Clipboard
+                📋 copy
             </button>
         </p>
 
@@ -41,17 +41,23 @@
             <pre class="entryDetail__notesPreformatted">{{ entry.notes }}</pre>
         </p>
 
-        <button class="button" v-on:click="backToList">◀︎ back</button>
-        <button class="button" v-on:click="editEntry">edit</button>
+        <button
+            class="button entryDetail__button--back"
+            v-on:click="backToList">◀︎ back</button>
+
+        <button
+            class="button entryDetail__button--edit"
+            v-on:click="editEntry">🖋 edit</button>
 
         <button
             v-if="deleteInterval == 0"
-            class="button"
-            v-on:click="deleteEntry">delete</button>
+            class="button entryDetail__button entryDetail__button--delete"
+            v-on:click="deleteEntry">✖ delete</button>
+
         <button
             v-if="deleteInterval"
-            class="button"
-            v-on:click="cancelDelete">cancel delete | {{ secondsRemaining }}</button>
+            class="button entryDetail__button entryDetail__button--delete"
+            v-on:click="cancelDelete">🚫 cancel delete | {{ secondsRemaining }}</button>
     </div>
 </script>
 

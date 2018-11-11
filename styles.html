@@ -12,8 +12,78 @@
 
 <body>
     <div id="app">
+        <!-- Add entry -->
+        <form
+            autocomplete="off"
+            v-on:change="validate"
+            v-on:submit.prevent="nothing">
+
+            <fieldset>
+                <legend>Add entry</legend>
+
+                <label class="form__label">Title
+                    <span class="form__error">Title error</span>
+
+                    <input
+                        class="form__input"
+                        type="text"
+                        name="title"
+                    />
+                </label>
+
+                <label class="form__label">Url</span>
+                    <input
+                        class="form__input"
+                        type="url"
+                        name="url"
+                    />
+                </label>
+
+                <label class="form__label">Username
+                    <input
+                        class="form__input"
+                        type="text"
+                        name="username"
+                    />
+                </label>
+
+                <label class="form__label"> Password
+                    <span class="form__error">Password error</span>
+                    <span class="button__generate">► generate</span>
+
+                    <input
+                        class="form__input"
+                        name="password"
+                    />
+
+                    <!-- creds-gen-password -->
+                    <div>
+                            <input
+                                placeholder="length"
+                                type="number"
+                                class="form__input form__input--short"
+                            />
+
+                            <button class="button" type="button">generate</button>
+                            <button class="button" type="button">X</button>
+                        </label>
+                    </div>
+                </label>
+
+                <label class="form__label">Notes
+                    <textarea
+                        class="form__textarea"
+                        name="notes"></textarea>
+                </label>
+
+                <button class="button" type="button" disabled="disabled">create</button>
+                <button class="button" type="button">cancel</button>
+            </fieldset>
+        </form>
+
+
         <!-- Menu -->
-        <div>
+        <div style="margin-top: 3em;">
             <fieldset>
                 <legend>Menu</legend>
                 <button
