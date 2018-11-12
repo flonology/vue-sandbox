@@ -158,6 +158,11 @@ a, a:visited {
     border: 2px solid white;
 }
 
+.list__entry:hover {
+    cursor: pointer;
+    border: 2px dotted lightgrey;
+}
+
 .list__entry--selected {
     border: 2px solid lightgrey;
 }
