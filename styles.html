@@ -12,12 +12,29 @@
 
 <body>
     <div id="app">
-        <!-- Add entry -->
-        <form
-            autocomplete="off"
-            v-on:change="validate"
-            v-on:submit.prevent="nothing">
+        <!-- Restore -->
+        <fieldset>
+            <legend>Restore</legend>
 
+            <button
+                class="button menu__back"
+                type="button">◀︎ back</button>
+
+            <div class="backup__message">Some message here…</div>
+            <input type="file"/>
+
+            <button
+                class="button button__restore-reload"
+                type="button">🌟 restore</button>
+
+            <button
+                class="button button__restore-reload"
+                type="button">🔄 reload</button>
+        </fieldset>
+
+
+        <!-- Add entry -->
+        <form autocomplete="off" style="margin-top: 3em;">
             <fieldset>
                 <legend>Add entry</legend>
 

@@ -1,0 +1,100 @@
+<script type="text/x-template" id="restore-tpl">
+    <fieldset>
+        <legend>Restore</legend>
+
+        <button
+            type="button"
+            class="button menu__back"
+            v-show="showBackButton"
+            v-on:click="gotoCreds">◀︎ back</button>
+
+        <div class="backup__message">{{ restoreMessage }}</div>
+        <input
+            type="file"
+            v-show="showFileSelector"
+            v-on:change="fileSelected" ref="fileToUpload"/>
+
+        <button
+            type="button"
+            class="button button__restore-reload"
+            v-show="showRestoreButton"
+            v-on:click="restoreBackup">🌟 restore</button>
+
+        <button
+            type="button"
+            class="button button__restore-reload"
+            v-show="showReloadButton"
+            v-on:click="reload">🔄 reload</button>
+    </fieldset>
+</script>
+
+
+<script>
+    Vue.component('restore', {
+        template: '#restore-tpl',
+        props: ['api'],
+        computed: {
+            showFileSelector: function() {
+                return !this.restoreDone;
+            },
+            showRestoreButton: function() {
+                return (
+                    this.fileToUpload &&
+                    !this.restoreInProgress &&
+                    !this.restoreDone
+                );
+            },
+            showReloadButton: function() {
+                return this.restoreDone;
+            },
+            showBackButton: function() {
+                return !this.restoreDone;
+            }
+        },
+        data: function() {
+            return {
+                restoreMessage: 'Choose file to restore from',
+                fileToUpload: null,
+                restoreInProgress: false,
+                restoreDone: false
+            };
+        },
+        methods: {
+            fileSelected: function() {
+                this.fileToUpload = this.$refs.fileToUpload.files[0];
+                this.restoreMessage = 'Ready to restore…';
+            },
+            restoreBackup: function() {
+                if (this.fileToUpload == null) {
+                    return;
+                }
+
+                var self = this;
+                var formData = new FormData();
+                formData.append('backup_file', this.fileToUpload);
+
+                self.restoreMessage = 'Uploading…';
+                self.restoreInProgress = true;
+
+                this.api.restoreBackup(formData, function(success) {
+                    self.restoreMessage
+                        = 'Nice. Restored ' + success.restored + ', '
+                        + 'updated ' + success.updated + ', and left '
+                        + success.untouched + ' untouched.';
+
+                    self.restoreDone = true;
+                    self.restoreInProgress = false;
+                }, function(error) {
+                    self.restoreInProgress = false;
+                    self.restoreMessage = 'Error: ' + error.statusText;
+                });
+            },
+            reload: function() {
+                this.$emit('reload');
+            },
+            gotoCreds: function() {
+                this.$emit('goto-creds');
+            }
+        }
+    });
+</script>

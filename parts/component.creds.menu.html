@@ -66,16 +66,16 @@
                 this.$emit('go-back');
             },
             add: function() {
-                console.log('Add...');
+                this.$emit('add-entry');
             },
             lock: function() {
-                console.log('Lock...');
+                this.$emit('lock');
             },
             backup: function() {
-                console.log('Backup...');
+                this.$emit('goto-backup');
             },
             restore: function() {
-                console.log('Restore...');
+                this.$emit('goto-restore');
             },
             deleteAccount: function() {
                 console.log('Delete...');

@@ -4,9 +4,6 @@
             ref="selectList"
             v-on:open-menu="openMenu"
             v-on:show-list-entry="showListEntry"
-            v-on:add-entry="addEntry"
-            v-on:lock="gotoLock"
-            v-on:goto-backup="gotoBackup"
             v-bind:creds="decryptedCreds"
             v-bind:highlight-entry="highlightEntry"></creds-select-list>
 
@@ -33,6 +30,10 @@
             v-on:back-to-list="gotoList"></creds-edit-entry>
 
         <creds-menu v-if="page === 'menu'"
+            v-on:add-entry="addEntry"
+            v-on:lock="gotoLock"
+            v-on:goto-backup="gotoBackup"
+            v-on:goto-restore="gotoRestore"
             v-on:go-back="gotoList"></creds-menu>
 
         <creds-lock v-if="page === 'lock'"
@@ -43,6 +44,11 @@
             v-bind:api="api"
             v-on:goto-creds="gotoList"
             v-on:backup-restored="reloadCreds"></backup>
+
+        <restore v-if="page === 'restore'"
+            v-bind:api="api"
+            v-on:goto-creds="gotoList"
+            v-on:reload="reloadCreds"></restore>
     </div>
 </script>
 
@@ -76,6 +82,9 @@ Vue.component('creds', {
         },
         gotoBackup: function() {
             this.page = 'backup';
+        },
+        gotoRestore: function() {
+            this.page = 'restore';
         },
         gotoLock: function() {
             this.page = 'lock';

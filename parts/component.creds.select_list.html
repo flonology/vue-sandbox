@@ -1,8 +1,6 @@
 <script type="text/x-template" id="creds-select-list-tpl">
     <div> <!-- select list container -->
         <div class="search__container">
-            <button class="button" v-on:click="addNewEntry">add</button>
-
             <input class="search__input input--standard"
                 placeholder="Search…"
                 v-model="searchString"
@@ -85,6 +83,7 @@ Vue.component('creds-select-list', {
     },
     methods: {
         openMenu: function() {
+            this.saveScrollPosition();
             this.$emit('open-menu');
         },
         scrollToSavedPosition: function() {
@@ -103,10 +102,6 @@ Vue.component('creds-select-list', {
         },
         gotoBackup: function() {
             this.$emit('goto-backup');
-        },
-        addNewEntry: function() {
-            this.saveScrollPosition();
-            this.$emit('add-entry');
         },
         showListEntry: function(listEntry) {
             this.saveScrollPosition();
