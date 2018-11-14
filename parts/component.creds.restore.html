@@ -1,4 +1,4 @@
-<script type="text/x-template" id="restore-tpl">
+<script type="text/x-template" id="creds-restore-tpl">
     <fieldset>
         <legend>Restore</legend>
 
@@ -30,8 +30,8 @@
 
 
 <script>
-    Vue.component('restore', {
-        template: '#restore-tpl',
+    Vue.component('creds-restore', {
+        template: '#creds-restore-tpl',
         props: ['api'],
         computed: {
             showFileSelector: function() {

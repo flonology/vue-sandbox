@@ -1,0 +1,57 @@
+<script type="text/x-template" id="creds-backup-tpl">
+    <fieldset>
+        <legend>Backup</legend>
+
+        <button
+            type="button"
+            class="button menu__back"
+            v-on:click="gotoCreds">◀︎ back</button>
+
+        <div class="backup__message">
+            {{ backupMessage }}
+        </div>
+
+        <a
+            class="button backup__link"
+            v-if="backupUrl"
+            v-bind:href="backupUrl"
+            v-on:click="resetBackupUrl">💾 download</a>
+    </fieldset>
+</script>
+
+
+<script>
+    Vue.component('creds-backup', {
+        template: '#creds-backup-tpl',
+        props: ['api'],
+        mounted: function() {
+            this.fetchBackupUrl();
+        },
+        data: function() {
+            return {
+                backupUrl: '',
+                backupMessage: '',
+            };
+        },
+        methods: {
+            resetBackupUrl: function() {
+                this.backupMessage = 'A Backup is always a good choice 😎';
+                this.backupUrl = '';
+            },
+            fetchBackupUrl: function() {
+                var self = this;
+                self.backupMessage = 'Preparing…';
+
+                self.api.getBackupUrl(function(url) {
+                    self.backupUrl = url;
+                    self.backupMessage = 'Ready';
+                }, function(error) {
+                    self.backupMessage = 'Error: ' + error.statusText;
+                });
+            },
+            gotoCreds: function() {
+                this.$emit('goto-creds');
+            }
+        }
+    });
+</script>

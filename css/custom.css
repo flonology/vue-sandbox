@@ -42,11 +42,10 @@ a, a:visited {
 }
 
 .backup__link {
-    font-weight: bold;
     display: block;
-    color: inherit;
+    width: 10em;
     text-decoration: none;
-    margin-bottom: 1em;
+    text-align: center;
 }
 
 .logout {
@@ -57,8 +56,11 @@ a, a:visited {
 .button {
     cursor: pointer;
     padding: 0.75em;
+    font-family: sans-serif;
+    letter-spacing: 0.1em;
     font-variant: small-caps;
     font-weight: bold;
+    font-size: 0.7em;
     background-color: white;
     border: 1px solid lightgrey;
 }
@@ -72,7 +74,8 @@ a, a:visited {
 .button__restore-reload {
     display: block;
     margin-top: 3em;
-    width: 7.5em;
+    width: 10em;
+    text-align: center;
 }
 
 .button__generate {
@@ -223,4 +226,8 @@ a, a:visited {
 
 .entryDetail__button--delete {
     float: right;
+}
+
+.delete-account__info {
+    margin-bottom: 1em;
 }

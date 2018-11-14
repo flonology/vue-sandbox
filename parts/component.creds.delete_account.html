@@ -1,0 +1,41 @@
+<script type="text/x-template" id="creds-delete-account-tpl">
+    <fieldset style="margin-top: 1.5em;">
+        <legend>Delete account</legend>
+
+        <button
+            type="button"
+            class="button menu__back"
+            v-on:click="gotoCreds">◀︎ back</button>
+
+        <div class="delete-account__info">
+            This deletes all your stored data.
+            If you have a backup, you can re-register later and
+            restore your creds from that file.
+        </div>
+
+        <button
+            class="button"
+            type="button"
+            v-on:click="deleteAccount">delete account</button>
+    </fieldset>
+</script>
+
+
+<script>
+    Vue.component('creds-delete-account', {
+        template: '#creds-delete-account-tpl',
+        props: ['api'],
+        data: function() {
+            return {
+            };
+        },
+        methods: {
+            deleteAccount: function() {
+                this.$emit('delete-account');
+            },
+            gotoCreds: function() {
+                this.$emit('goto-creds');
+            }
+        }
+    });
+</script>

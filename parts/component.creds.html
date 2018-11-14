@@ -34,21 +34,26 @@
             v-on:lock="gotoLock"
             v-on:goto-backup="gotoBackup"
             v-on:goto-restore="gotoRestore"
+            v-on:goto-delete-account="gotoDeleteAccount"
             v-on:go-back="gotoList"></creds-menu>
 
         <creds-lock v-if="page === 'lock'"
             v-on:lock="lock"
             v-on:back-to-list="gotoList"></creds-lock>
 
-        <backup v-if="page === 'backup'"
+        <creds-backup v-if="page === 'backup'"
             v-bind:api="api"
-            v-on:goto-creds="gotoList"
-            v-on:backup-restored="reloadCreds"></backup>
+            v-on:goto-creds="gotoList"></creds-backup>
 
-        <restore v-if="page === 'restore'"
+        <creds-restore v-if="page === 'restore'"
             v-bind:api="api"
             v-on:goto-creds="gotoList"
-            v-on:reload="reloadCreds"></restore>
+            v-on:reload="reloadCreds"></creds-restore>
+
+        <creds-delete-account v-if="page === 'delete_account'"
+            v-bind:api="api"
+            v-on:goto-creds="gotoList"
+            v-on:delete-account="deleteAccount"></creds-delete-account>
     </div>
 </script>
 
@@ -88,6 +93,9 @@ Vue.component('creds', {
         },
         gotoLock: function() {
             this.page = 'lock';
+        },
+        gotoDeleteAccount: function() {
+            this.page = 'delete_account';
         },
         credsDecrypted: function(decryptedCreds) {
             this.decryptedCreds = decryptedCreds;
@@ -193,6 +201,9 @@ Vue.component('creds', {
 
             this.selectedListEntry = selectedListEntry;
             this.page = 'showEntry';
+        },
+        deleteAccount: function() {
+            console.log('Delete account...');
         }
     }
 })

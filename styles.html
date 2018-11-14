@@ -12,8 +12,46 @@
 
 <body>
     <div id="app">
-        <!-- Restore -->
+        <!-- Delete account -->
         <fieldset>
+            <legend>Delete account</legend>
+
+            <button
+                type="button"
+                class="button menu__back"
+                v-on:click="gotoCreds">◀︎ back</button>
+
+            <div class="delete-account__info">
+                This deletes all your stored data.
+                If you have a backup, you can re-register later and
+                restore your creds from that file.
+            </div>
+
+            <button
+                class="button"
+                type="button"
+                v-on:click="deleteAccount">delete account</button>
+        </fieldset>
+
+
+        <!-- Backup -->
+        <fieldset style="margin-top: 3em;">
+            <legend>Backup</legend>
+
+            <button
+                type="button"
+                class="button menu__back">◀︎ back</button>
+
+            <div class="backup__message">
+                A Backup is always a good choice 😎
+            </div>
+
+            <a class="button backup__link">💾 download</a>
+        </fieldset>
+
+
+        <!-- Restore -->
+        <fieldset style="margin-top: 3em;">
             <legend>Restore</legend>
 
             <button
