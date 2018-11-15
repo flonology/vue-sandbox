@@ -11,7 +11,6 @@
                     type="password"
                     autofocus="autofocus"
                     v-model="pin"
-                    v-on:input="typingShowHide"
                 />
             </label>
 
@@ -56,23 +55,6 @@
             },
             forgotPin: function() {
                 this.$emit('forgot-pin');
-            },
-            // duplicate
-            typingShowHide: function(event) {
-                var self = this;
-
-                if (self.typingTimeout) {
-                    clearTimeout(self.typingTimeout);
-                }
-
-                if (event.target.type !== 'text') {
-                    event.target.type = 'text';
-                }
-
-                self.typingTimeout = setTimeout(function() {
-                    event.target.type = 'password';
-                    self.typingTimeout = 0;
-                }, 750);
             }
         }
     });

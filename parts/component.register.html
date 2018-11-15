@@ -16,11 +16,9 @@
             </label>
 
             <label class="form__label">Password
-                <input
+                <selfhide-password
                     class="form__input"
-                    type="password"
-                    v-model="password"
-                    v-on:input="typingShowHide" />
+                    v-model="password"></selfhide-password>
             </label>
 
             <button
@@ -64,23 +62,6 @@
             },
             cancel: function() {
                 this.$emit('cancel');
-            },
-            // Duplicate
-            typingShowHide: function(event) {
-                var self = this;
-
-                if (self.typingTimeout) {
-                    clearTimeout(self.typingTimeout);
-                }
-
-                if (event.target.type !== 'text') {
-                    event.target.type = 'text';
-                }
-
-                self.typingTimeout = setTimeout(function() {
-                    event.target.type = 'password';
-                    self.typingTimeout = 0;
-                }, 750);
             }
         }
     });

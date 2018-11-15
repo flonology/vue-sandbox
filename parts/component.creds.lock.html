@@ -4,13 +4,9 @@
             <legend>Enter pin to lock</legend>
 
             <label class="form__label">Pin (min. 6 chars)
-                <input
+                <selfhide-password
                     class="form__input"
-                    type="password"
-                    autofocus="autofocus"
-                    v-model="pin"
-                    v-on:input="typingShowHide"
-                />
+                    v-model="pin"></selfhide-password>
             </label>
 
             <button
@@ -54,23 +50,6 @@
             },
             backToList: function() {
                 this.$emit('back-to-list');
-            },
-            // duplicate
-            typingShowHide: function(event) {
-                var self = this;
-
-                if (self.typingTimeout) {
-                    clearTimeout(self.typingTimeout);
-                }
-
-                if (event.target.type !== 'text') {
-                    event.target.type = 'text';
-                }
-
-                self.typingTimeout = setTimeout(function() {
-                    event.target.type = 'password';
-                    self.typingTimeout = 0;
-                }, 750);
             }
         }
     });
