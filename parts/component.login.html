@@ -41,7 +41,7 @@
             return {
                 username: 'John Doe',
                 password: 'Johns Secret Password',
-                errorMessage: 'Will click login button shortly…'
+                errorMessage: ''
             };
         },
         mounted: function() {
@@ -49,7 +49,7 @@
             this.$refs.loginInputUsername.focus();
 
             setTimeout(function() {
-                self.$refs.loginSubmitButton.click();
+                // self.login();
             }, 500);
         },
         methods: {

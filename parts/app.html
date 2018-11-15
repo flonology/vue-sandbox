@@ -7,7 +7,7 @@
 <unlock v-if="page === 'unlock'"
     v-bind:message="unlockMessage"
     v-on:unlock="unlock"
-    v-on:forgot-pin="forgetUnlock"></unlock>
+    v-on:forgot-pin="logout"></unlock>
 
 <register v-if="page === 'register'"
     v-bind:api="api"
@@ -17,6 +17,7 @@
 <creds v-if="page === 'creds'"
     v-on:lock="lock"
     v-on:reload-creds="getCreds"
+    v-on:account-deleted="logoutAfterAccountDeleted"
     v-bind:api="api"
     v-bind:encryptor="encryptor"
     v-bind:encrypted-creds="credsEnc"></creds>

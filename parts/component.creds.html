@@ -203,7 +203,13 @@ Vue.component('creds', {
             this.page = 'showEntry';
         },
         deleteAccount: function() {
-            console.log('Delete account...');
+            var self = this;
+
+            self.api.deleteAccount(function(success) {
+                self.$emit('account-deleted');
+            }, function(error) {
+                console.log(error);
+            });
         }
     }
 })

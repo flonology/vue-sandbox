@@ -45,18 +45,12 @@
                     this.api.setApiKey(apiKey);
                     this.encryptor.setPassword(decryptKey);
 
-                    localStorage.removeItem('creds_api_key');
-                    localStorage.removeItem('creds_decrypt_key');
+                    this.clearLocalStorage();
                     this.getCreds();
                 }
                 catch (e) {
                     this.unlockMessage = 'Incorrect Pin.';
                 }
-            },
-            forgetUnlock: function() {
-                localStorage.removeItem('creds_api_key');
-                localStorage.removeItem('creds_decrypt_key');
-                this.logout();
             },
             gotoCreds: function() {
                 this.page = 'creds';
@@ -64,12 +58,20 @@
             removeEncryptionData: function() {
                 this.encryptor.removePassword();
                 this.api.removeApiKey();
-                this.loginMessage = '';
                 this.credsEnc = [];
             },
+            clearLocalStorage: function() {
+                localStorage.removeItem('creds_api_key');
+                localStorage.removeItem('creds_decrypt_key');
+            },
             logout: function() {
+                this.clearLocalStorage();
                 this.removeEncryptionData();
                 this.page = 'login';
+            },
+            logoutAfterAccountDeleted: function() {
+                this.loginMessage = 'Your account has been deleted.';
+                this.logout();
             },
             register: function() {
                 this.page = 'register';

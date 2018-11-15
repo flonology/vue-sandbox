@@ -12,6 +12,25 @@
         };
 
 
+        var deleteAccount = function(successCall, errorCall) {
+            var url
+                = My.Config.api.baseUrl
+                + My.Config.api.routes.account;
+
+            axios
+                .delete(
+                    url,
+                    self.config()
+                )
+                .then(function (response) {
+                    successCall(response.data);
+                })
+                .catch(function (error) {
+                    errorCall(error.response);
+                });
+        };
+
+
         var restoreBackup = function(formData, successCall, errorCall) {
             var url
                 = My.Config.api.baseUrl
@@ -23,7 +42,6 @@
                     successCall(response.data.data);
                 })
                 .catch(function (error) {
-                    console.log(error);
                     errorCall(error.response);
                 });
         };
@@ -177,6 +195,7 @@
             createCred: createCred,
             updateCred: updateCred,
             deleteCred: deleteCred,
+            deleteAccount: deleteAccount,
             getApiKey: getApiKey,
             setApiKey: setApiKey,
             removeApiKey: removeApiKey
