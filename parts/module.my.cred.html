@@ -1,0 +1,44 @@
+<script>
+    My.Cred = function() {
+        var self = {
+            id: null,
+            title: '',
+            url: '',
+            username: '',
+            password: '',
+            notes: ''
+        };
+
+        var values = function() {
+            return {
+                id: self.id,
+                title: self.title,
+                url: self.url,
+                username: self.username,
+                password: self.password,
+                notes: self.notes
+            }
+        };
+
+        var set = function(entry) {
+            self.id = entry.id;
+            self.title = entry.title;
+            self.url = entry.url;
+            self.username = entry.username;
+            self.password = entry.password;
+            self.notes = entry.notes;
+        };
+
+        return {
+            values: values,
+            set: set
+        };
+    };
+
+    My.Cred.from = function(entry) {
+        var cred = My.Cred();
+        cred.set(entry);
+
+        return cred;
+    };
+</script>

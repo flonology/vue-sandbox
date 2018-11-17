@@ -1,0 +1,16 @@
+<script type="text/x-template" id="creds-error-tpl">
+    <div class="creds__error">
+        Error: {{ error }}
+    </div>
+</script>
+
+
+<script>
+    Vue.component('creds-error', {
+        template: '#creds-error-tpl',
+        props: [ 'error' ],
+        data: function() {
+            return {};
+        }
+    });
+</script>

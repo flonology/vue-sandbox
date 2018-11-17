@@ -1,11 +1,17 @@
-<script type="text/x-template" id="creds-add-entry-tpl">
+<script type="text/x-template" id="creds-add-update-entry-tpl">
     <form
         autocomplete="off"
         v-on:change="validate"
         v-on:submit.prevent="nothing">
 
         <fieldset>
-            <legend>Add entry</legend>
+            <legend v-if="cred.id">Update Cred</legend>
+            <legend v-if="!cred.id">Create new Cred</legend>
+
+            <button
+                type="button"
+                class="button menu__back"
+                v-on:click="backToList">◀︎ back</button>
 
             <label class="form__label">Title
                 <span class="form__error">{{ error.title }}</span>
@@ -15,7 +21,7 @@
                     type="text"
                     name="title"
                     autofocus="autofocus"
-                    v-model="create.title"
+                    v-model="cred.title"
                 />
             </label>
 
@@ -24,7 +30,7 @@
                     class="form__input"
                     type="url"
                     name="url"
-                    v-model="create.url"
+                    v-model="cred.url"
                 />
             </label>
 
@@ -33,7 +39,7 @@
                     class="form__input"
                     type="text"
                     name="username"
-                    v-model="create.username"
+                    v-model="cred.username"
                 />
             </label>
 
@@ -46,7 +52,8 @@
 
                 <selfhide-password
                     class="form__input"
-                    v-model="create.password"></selfhide-password>
+                    v-bind:show-password="showPassword"
+                    v-model="cred.password"></selfhide-password>
 
                 <creds-gen-password
                     v-if="showGeneratePassword"
@@ -59,71 +66,64 @@
                 <textarea
                     class="form__textarea"
                     name="notes"
-                    v-model="create.notes"></textarea>
+                    v-model="cred.notes"></textarea>
             </label>
 
             <button
                 class="button"
                 type="button"
-                v-on:click="createEntry"
-                v-bind:disabled="createDisabled">create</button>
+                v-on:click="processEntry"
+                v-bind:disabled="processDisabled">
+                <span v-if="cred.id">♲ update</span>
+                <span v-if="!cred.id">💫 create</span>
+            </button>
 
-            <button
-                class="button"
-                type="button"
-                v-on:click="backToList">cancel</button>
+            <span class="form__error">{{ updateErrorMessage }}</span>
         </fieldset>
     </form>
 </script>
 
 
 <script>
-    Vue.component('creds-add-entry', {
-        template: '#creds-add-entry-tpl',
-        props: ['processingEntry'],
+    Vue.component('creds-add-update-entry', {
+        template: '#creds-add-update-entry-tpl',
+        props: ['processingEntry', 'entry', 'updateErrorMessage'],
         mounted: function() {
             this.validate();
         },
         computed: {
-            createDisabled: function() {
+            processDisabled: function() {
                 return this.processingEntry || this.error.title || this.error.password;
             }
         },
         data: function() {
             return {
+                showPassword: false,
                 showGeneratePassword: false,
-                create: {
-                    title: 'Some Example Title',
-                    url: 'http://www.example.com',
-                    username: 'ExampleUser',
-                    password: 'ExamplePass',
-                    notes: 'Hi, this is an example note'
-                },
                 error: {},
-                typingTimeout: 0
+                cred: My.Cred.from(this.entry).values()
             };
         },
         methods: {
             nothing: function() {
                 return;
             },
-            createEntry: function(event) {
-                this.$emit('create-entry', {
-                    title: this.create.title,
-                    url: this.create.url,
-                    username: this.create.username,
-                    password: this.create.password,
-                    notes: this.create.notes
-                });
+            processEntry: function(event) {
+                if (this.cred.id) {
+                    this.$emit('update-entry', this.cred.id, this.cred);
+                } else {
+                    delete this.cred.id;
+                    this.$emit('create-entry', this.cred);
+                }
             },
             validate: function(event) {
                 this.error = {};
 
-                if (this.create.title == '') {
+                if (!this.cred.title) {
                     this.error.title = 'required';
                 }
 
-                if (this.create.password == '') {
+                if (!this.cred.password) {
                     this.error.password = 'required';
                 }
             },
@@ -134,7 +134,7 @@
                 this.showGeneratePassword = true;
             },
             passwordGenerated: function(password) {
-                this.create.password = password;
+                this.cred.password = password;
                 this.closePasswordGenerator();
                 this.flashPassword();
                 this.validate();
@@ -142,13 +142,12 @@
             closePasswordGenerator: function() {
                 this.showGeneratePassword = false;
             },
-            // this does not work anymore (because of component). Fix?
             flashPassword: function() {
                 var self = this;
+                self.showPassword = true;
 
-                self.passwordInputType = 'text';
                 setTimeout(function() {
-                    self.passwordInputType = 'password';
+                    self.showPassword = false;
                 }, 1000);
             }
         }

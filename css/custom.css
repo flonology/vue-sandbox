@@ -16,6 +16,13 @@ a, a:visited {
     color: inherit;
 }
 
+.creds__error {
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: #eaa;
+    font-weight: bold;
+}
+
 .menu__back {
     display: block;
     margin-bottom: 3em;

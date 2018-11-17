@@ -1,5 +1,9 @@
 <script type="text/x-template" id="creds-tpl">
     <div> <!-- creds container -->
+        <creds-error
+            v-if="error"
+            v-bind:error="error"></creds-error>
+
         <creds-select-list v-show="page === 'list'"
             ref="selectList"
             v-on:open-menu="openMenu"
@@ -18,16 +22,18 @@
               v-bind:entry="selectedListEntry"
               v-on:edit-entry="editEntry"></creds-list-entry>
 
-        <creds-add-entry v-if="page === 'add'"
+        <creds-add-update-entry v-if="page === 'add'"
+            v-bind:entry="{}"
             v-bind:processing-entry="processingEntry"
             v-on:create-entry="createEntry"
-            v-on:back-to-list="gotoList"></creds-add-entry>
+            v-on:back-to-list="gotoList"></creds-add-update-entry>
 
-        <creds-edit-entry v-if="page === 'edit'"
+        <creds-add-update-entry v-if="page === 'edit'"
             v-bind:entry="selectedListEntry"
             v-bind:processing-entry="processingEntry"
+            v-bind:update-error-message="updateErrorMessage"
             v-on:update-entry="updateEntry"
-            v-on:back-to-list="gotoList"></creds-edit-entry>
+            v-on:back-to-list="gotoList"></creds-add-update-entry>
 
         <creds-menu v-if="page === 'menu'"
             v-on:add-entry="addEntry"
@@ -69,6 +75,8 @@ Vue.component('creds', {
             highlightEntry: 0,
             processingEntry: false,
             selectedListEntry: null,
+            error: '',
+            updateErrorMessage: ''
         };
     },
     mounted: function() {
@@ -100,6 +108,7 @@ Vue.component('creds', {
         credsDecrypted: function(decryptedCreds) {
             this.decryptedCreds = decryptedCreds;
             this.gotoList();
+            // this.addEntry();
         },
         gotoList: function() {
             this.page = 'list';
@@ -151,20 +160,29 @@ Vue.component('creds', {
             }, 1500);
         },
         updateEntry: function(id, entry) {
+            // Move much of this into component? encryptor and api as props?
             var self = this;
 
             self.processingEntry = true;
             var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
 
             var successCall = function(updatedId) {
+                null[1];
+
+                var startIndex = self.findListEntryIndex(updatedId);
+                self.decryptedCreds.splice(
+                    startIndex,
+                    1 /* delete count */,
+                    entry /* the new, updated entry */
+                );
+
                 self.processingEntry = false;
                 self.gotoList();
                 self.flashListEntry(updatedId);
             }
 
             var errorCall = function() {
-                /* todo: do something useful */
-                console.log('Oh nooooo....');
+                self.updateErrorMessage = 'Could not update entry';
                 self.processingEntry = false;
             }
 
