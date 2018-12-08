@@ -46,7 +46,7 @@
                     this.encryptor.setPassword(decryptKey);
 
                     this.clearLocalStorage();
-                    this.getCreds();
+                    this.loadCreds();
                 }
                 catch (e) {
                     this.unlockMessage = 'Incorrect Pin.';
@@ -83,17 +83,12 @@
                 this.loginMessage = 'Successfully registered. You may login now :-)';
                 this.page = 'login';
             },
-            getCreds: function() {
-                var self = this;
-                self.page = 'loading';
-
-                this.api.getCreds(function(creds) {
-                    self.credsEnc = creds;
-                    self.gotoCreds();
-                }, function(error) {
-                    self.logout();
-                    self.loginMessage = 'Could not get creds – Server error ' + error.status;
-                });
+            loadCreds: function() {
+                this.page = 'loading';
+            },
+            gotCreds: function(creds) {
+                this.credsEnc = creds;
+                this.gotoCreds();
             }
         }
     })

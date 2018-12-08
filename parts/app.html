@@ -2,7 +2,7 @@
     v-bind:login-message="loginMessage"
     v-bind:api="api"
     v-on:register="register"
-    v-on:logged-in="getCreds"></login>
+    v-on:logged-in="loadCreds"></login>
 
 <unlock v-if="page === 'unlock'"
     v-bind:message="unlockMessage"
@@ -16,13 +16,16 @@
 
 <creds v-if="page === 'creds'"
     v-on:lock="lock"
-    v-on:reload-creds="getCreds"
+    v-on:reload-creds="loadCreds"
     v-on:account-deleted="logoutAfterAccountDeleted"
     v-bind:api="api"
     v-bind:encryptor="encryptor"
     v-bind:encrypted-creds="credsEnc"></creds>
 
-<loading v-if="page === 'loading'"></loading>
+<loading v-if="page === 'loading'"
+    v-bind:api="api"
+    v-on:logout="logout"
+    v-on:got-creds="gotCreds"></loading>
 
 <div v-if="page === 'creds'" class="logout">
     <button class="button" v-on:click="logout">logout</button>

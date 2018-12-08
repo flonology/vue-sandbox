@@ -1,6 +1,10 @@
 <script type="text/x-template" id="loading-tpl">
     <div>
-        Loading…
+        {{ message }}
+
+        <div v-if="error">
+            <button class="button" v-on:click="logout">Logout</button>
+        </div>
     </div>
 </script>
 
@@ -8,8 +12,28 @@
 <script>
     Vue.component('loading', {
         template: '#loading-tpl',
+        props: [ 'api' ],
         data: function() {
-            return {};
+            return {
+                message: 'Loading…',
+                error: false
+            };
+        },
+        mounted: function() {
+            var self = this;
+
+            self.api.getCreds(function(creds) {
+                self.$emit('got-creds', creds);
+                console.assert(creds, 'creds not loaded');
+            }, function(error) {
+                self.message = 'Could not get creds – Server error ' + error.status;
+                self.error = true;
+            });
+        },
+        methods: {
+            logout: function() {
+                this.$emit('logout');
+            }
         }
     });
 </script>
