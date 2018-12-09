@@ -5,17 +5,20 @@
             minSearchLength: 3
         };
 
-        var isInEntry = function(entry, searchString) {
+        var isInEntry = function(searchEntry, searchString) {
             return (
-                entry.title.indexOf(searchString) !== -1 ||
-                entry.url.indexOf(searchString) !== -1
+                searchEntry.title.indexOf(searchString) !== -1 ||
+                searchEntry.url.indexOf(searchString) !== -1
             );
         };
 
         var allSearchStringsApply = function(entry, searchStrings) {
+            var title = entry.title ? entry.title.toLowerCase() : '';
+            var url = entry.url ? entry.url.toLowerCase() : '';
+
             var searchEntry = {
-                title: entry.title.toLowerCase(),
-                url: entry.url.toLowerCase()
+                title: title,
+                url: url
             };
 
             return searchStrings.reduce(function(found, searchString) {
@@ -24,7 +27,7 @@
                 }
 
                 return found && isInEntry(searchEntry, searchString);
-            }, true);
+            }, true /* initial value */);
         };
 
         var search = function(searchString) {
