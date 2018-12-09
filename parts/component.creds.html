@@ -205,8 +205,8 @@ Vue.component('creds', {
                 self.flashListEntry(createdId);
             }
 
-            var errorCall = function() {
-                console.log('Oh nooooo....');
+            var errorCall = function(error) {
+                self.error = 'Sorry, could not create entry. Server said: ' + error.statusText;
                 self.processingEntry = false;
             }
 
