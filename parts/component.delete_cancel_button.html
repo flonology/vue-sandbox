@@ -1,0 +1,59 @@
+<script type="text/x-template" id="delete-cancel-button-tpl">
+    <button
+        type="button"
+        v-on:click="startCountdownOrCancel">{{ buttonText }}</button>
+</script>
+
+
+<script>
+    Vue.component('delete-cancel-button', {
+        template: '#delete-cancel-button-tpl',
+        props: [ 'value', 'showPassword' ],
+        data: function() {
+            return {
+                secondsRemaining: 0,
+                deleteInterval: 0
+            };
+        },
+        computed: {
+            buttonText: function() {
+                if (this.deleteInterval == 0) {
+                    return '✖ delete';
+                } else {
+                    return '🚫 cancel delete | ' + this.secondsRemaining;
+                };
+            }
+        },
+        methods: {
+            startCountdownOrCancel: function() {
+                if (this.deleteInterval) {
+                    this.cancel();
+                } else {
+                    this.startCountdown();
+                };
+            },
+            startCountdown: function() {
+                var self = this;
+                this.resetDeleteTimer();
+
+                this.deleteInterval = setInterval(function() {
+                    self.secondsRemaining -= 1;
+                    if (self.secondsRemaining > 0) {
+                        return;
+                    }
+
+                    self.cancel();
+                    self.$emit('delete');
+                }, 1000);
+            },
+            cancel: function() {
+                clearInterval(this.deleteInterval);
+                this.resetDeleteTimer();
+            },
+            resetDeleteTimer: function() {
+                this.deleteInterval = 0;
+                this.secondsRemaining = 5;
+            }
+        }
+    });
+</script>

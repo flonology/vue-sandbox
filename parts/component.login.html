@@ -3,11 +3,11 @@
         <fieldset>
             <legend>Please login</legend>
 
-            <div v-if="loginMessage" style="background-color: lightgreen;">
+            <div v-if="loginMessage" class="login__message login__message--success">
                 {{ loginMessage }}
             </div>
 
-            <div v-if="errorMessage" style="background-color: #eaa;">
+            <div v-if="errorMessage" class="login__message login__message--error">
                 {{ errorMessage }}
             </div>
 

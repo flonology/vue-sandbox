@@ -13,10 +13,9 @@
             restore your creds from that file.
         </div>
 
-        <button
+        <delete-cancel-button
             class="button"
-            type="button"
-            v-on:click="deleteAccount">delete account</button>
+            v-on:delete="deleteAccount"></delete-cancel-button>
     </fieldset>
 </script>
 
@@ -25,10 +24,6 @@
     Vue.component('creds-delete-account', {
         template: '#creds-delete-account-tpl',
         props: ['api'],
-        data: function() {
-            return {
-            };
-        },
         methods: {
             deleteAccount: function() {
                 this.$emit('delete-account');

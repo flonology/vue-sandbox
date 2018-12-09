@@ -23,6 +23,20 @@ a, a:visited {
     font-weight: bold;
 }
 
+.login__message {
+    margin-bottom: 1em;
+    padding: 1em;
+    font-weight: bold;
+}
+
+.login__message--success {
+    background-color: lightgreen;
+}
+
+.login__message--error {
+    background-color: #eaa;
+}
+
 .menu__back {
     display: block;
     margin-bottom: 3em;
@@ -68,6 +82,7 @@ a, a:visited {
     font-variant: small-caps;
     font-weight: bold;
     font-size: 0.7em;
+    line-height: 1em;
     background-color: white;
     border: 1px solid lightgrey;
 }

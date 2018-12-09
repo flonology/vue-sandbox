@@ -49,15 +49,9 @@
             class="button entryDetail__button--edit"
             v-on:click="editEntry">🖋 edit</button>
 
-        <button
-            v-if="deleteInterval == 0"
+        <delete-cancel-button
             class="button entryDetail__button entryDetail__button--delete"
-            v-on:click="deleteEntry">✖ delete</button>
-
-        <button
-            v-if="deleteInterval"
-            class="button entryDetail__button entryDetail__button--delete"
-            v-on:click="cancelDelete">🚫 cancel delete | {{ secondsRemaining }}</button>
+            v-on:delete="deleteEntry"></delete-cancel-button>
     </div>
 </script>
 
@@ -65,37 +59,10 @@
 <script>
     Vue.component('creds-list-entry', {
         template: '#creds-list-entry-tpl',
-        mounted: function() {
-        },
-        data: function() {
-            return {
-                secondsRemaining: 0,
-                deleteInterval: 0
-            };
-        },
         props: ['entry'],
         methods: {
             deleteEntry: function() {
-                var self = this;
-
-                this.resetDeleteTimer();
-                this.deleteInterval = setInterval(function() {
-                    self.secondsRemaining -= 1;
-                    if (self.secondsRemaining > 0) {
-                        return;
-                    }
-
-                    self.cancelDelete();
-                    self.$emit('delete-entry', self.entry);
-                }, 1000);
-            },
-            cancelDelete: function() {
-                clearInterval(this.deleteInterval);
-                this.resetDeleteTimer();
-            },
-            resetDeleteTimer: function() {
-                this.deleteInterval = 0;
-                this.secondsRemaining = 5;
+                this.$emit('delete-entry', this.entry);
             },
             copyToClipboard: function(event, inputField) {
                 var originalInputType = inputField.type;
