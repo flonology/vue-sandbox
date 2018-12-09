@@ -31,7 +31,6 @@
         <creds-add-update-entry v-if="page === 'edit'"
             v-bind:entry="selectedListEntry"
             v-bind:processing-entry="processingEntry"
-            v-bind:update-error-message="updateErrorMessage"
             v-on:update-entry="updateEntry"
             v-on:back-to-list="gotoList"></creds-add-update-entry>
 
@@ -75,8 +74,7 @@ Vue.component('creds', {
             highlightEntry: 0,
             processingEntry: false,
             selectedListEntry: null,
-            error: '',
-            updateErrorMessage: ''
+            error: ''
         };
     },
     mounted: function() {
@@ -108,7 +106,6 @@ Vue.component('creds', {
         credsDecrypted: function(decryptedCreds) {
             this.decryptedCreds = decryptedCreds;
             this.gotoList();
-            // this.addEntry();
         },
         gotoList: function() {
             this.page = 'list';
@@ -159,16 +156,18 @@ Vue.component('creds', {
                 self.highlightEntry = 0;
             }, 1500);
         },
+        scrollToTop: function() {
+            setTimeout(function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 50);
+        },
         updateEntry: function(id, entry) {
-            // Move much of this into component? encryptor and api as props?
             var self = this;
 
             self.processingEntry = true;
             var encrypted = this.encryptor.encrypt(JSON.stringify(entry));
 
             var successCall = function(updatedId) {
-                null[1];
-
                 var startIndex = self.findListEntryIndex(updatedId);
                 self.decryptedCreds.splice(
                     startIndex,
@@ -181,8 +180,10 @@ Vue.component('creds', {
                 self.flashListEntry(updatedId);
             }
 
-            var errorCall = function() {
-                self.updateErrorMessage = 'Could not update entry';
+            var errorCall = function(error) {
+                // todo: Remove dup with createEntry
+                self.scrollToTop();
+                self.error = 'Sorry, could not update entry. Server said: ' + error.statusText;
                 self.processingEntry = false;
             }
 
@@ -206,6 +207,7 @@ Vue.component('creds', {
             }
 
             var errorCall = function(error) {
+                self.scrollToTop();
                 self.error = 'Sorry, could not create entry. Server said: ' + error.statusText;
                 self.processingEntry = false;
             }
